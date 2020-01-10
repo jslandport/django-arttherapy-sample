@@ -1,0 +1,8 @@
+cd C:\Users\CyabbaZabba\CODEDEV\sample1
+venv\scripts\activate
+
+python "C:\Users\CyabbaZabba\CODEDEV\sample1\sample1\manage.py" runserver
+
+GOT TO:
+
+	http://127.0.0.1:8000/
