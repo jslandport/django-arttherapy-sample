@@ -24,7 +24,7 @@ class FinkPageView(TemplateView):
 class artTherapyPageView(TemplateView):
 	def get(self, request, **kwargs):  # get_name(request):
 		# if this is a POST request we need to process the form data
-		form = ArtTherapyForm(initial={'your_name':'Dan?','your_therapist':'Steve Jones'})
+		form = ArtTherapyForm(initial={'your_name':'Dan','your_therapist':'Joe Steveson'})
 		return render(request, 'arty.html', {'form': form})
 
 	def post(self, request, **kwargs):
