@@ -37,7 +37,8 @@ class artTherapyPageView(TemplateView):
 			# redirect to a new URL:
 			return HttpResponseRedirect('/thanks/')
 		else:
-			print( form.changed_data )  ## this shows up in the SERVER (commandline)..
+			## print shows up in the SERVER (commandline)..
+			### print( form.changed_data )
 			return render(request, 'arty.html', {'form': form})
 	
 
