@@ -24,14 +24,14 @@ class FinkPageView(TemplateView):
 class artTherapyPageView(TemplateView):
 	def get(self, request, **kwargs):  # get_name(request):
 		# if this is a POST request we need to process the form data
-		form = ArtTherapyForm(initial={'your_name':'Dan','your_therapist':'Joe Steveson'})
+		form = ArtTherapyForm() ## initial={'your_name':'Dan','your_therapist':'Joe Steveson'}
 		return render(request, 'arty.html', {'form': form})
 
 	def post(self, request, **kwargs):
 		# create a form instance and populate it with data from the request:
 		form = ArtTherapyForm(request.POST)
 		# check whether it's valid:
-		if 1==0 and form.is_valid():
+		if form.is_valid():
 			# process the data in form.cleaned_data as required
 			# ...
 			# redirect to a new URL:
