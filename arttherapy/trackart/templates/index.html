@@ -9,13 +9,23 @@
         <h1>Howdy! I am Learning Django!</h1>
         <p>Ahoy ahoy.</p>
 
-<ul>
-{% with 'yabba dabba due' as lbuh %}
-{% for f in lbuh.split %}
+{% if qcolor %}
+   <div>The colors in the database:</div>
+   <ul>
+   {% for qrow in qcolor %}
+     <li>{{ qrow.paintcolortitle }}</li>
+   {% endfor %}
+   </ul>
+{% else %}
+   <p><em>(no colors)</em></p>
+{% endif %}
+
+<!-- {% with 'yabba dabba due' as lbuh %}
+{% for f in lcolors.split %}
 	<li>{{ f }}</li>
 {% endfor %}
-{% endwith %}
-</ul>
+{% endwith %} -->
+
 
 <!--
         <h3><a href="/about/">About</a></h3>
