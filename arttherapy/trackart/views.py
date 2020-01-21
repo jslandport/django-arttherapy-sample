@@ -5,13 +5,20 @@ from django.http import HttpResponse, HttpResponseRedirect
 
 ## from .forms import ArtTherapyForm
 ## from trackart import templates
+from .models import paintcolor
 
 # Create your views here.
 class HomePageView(TemplateView):
-    def get(self, request, **kwargs):
-        return render(request, 'index.html', context=None)
-    def post(self, request, **kwargs): return render(request, 'indexpost.html', context=None)
-    
+   def get(self, request, **kwargs):
+      qcolor = paintcolor.objects.all()
+      ## lcolors = ', '.join([qrow.paintcolortitle for qrow in qcolor])
+      context = {
+         'qcolor': qcolor
+      }
+      return render(request, 'index.html', context=context)
+   def post(self, request, **kwargs):
+      return render(request, 'indexpost.html', context=None)
+   
     
 '''
 
