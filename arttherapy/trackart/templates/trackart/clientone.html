@@ -1,0 +1,21 @@
+{% comment %}
+EXPECTED INCOMING PARAMETERS:
+   qoneclient  -query of client data
+   id
+{% endcomment %}<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>TrackArt:  Client-Centric View</title>
+    </head>
+    <body>
+        <h1>TrackArt Client {{ id }}:</h1>
+        <p><a href="/">Back to Index</a></p>
+
+      <h3>{{ qoneclient.art_clientfirstname }}
+         {{ qoneclient.art_clientlastname }}
+      </h3>
+      <div>DOB: {{ qoneclient.art_clientdob }}</div>
+
+    </body>
+</html>

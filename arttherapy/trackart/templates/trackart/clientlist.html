@@ -1,0 +1,25 @@
+{% comment %}
+EXPECTED INCOMING PARAMETERS:
+   qclient  -query of client data
+{% endcomment %}<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>TrackArt:  Client-Centric View</title>
+    </head>
+    <body>
+        <h1>TrackArt Client-Centric View</h1>
+        <p><a href="/">Back to Index</a></p>
+
+{% if qclient %}
+   <ul>
+   {% for qrow in qclient %}
+     <li><a href="./client/{{ qrow.id }}">{{ qrow.art_clientfirstname }} {{ qrow.art_clientlastname }}</a></li>
+   {% endfor %}
+   </ul>
+{% else %}
+   <p><em>No Clients returned</em></p>
+{% endif %}
+
+    </body>
+</html>
