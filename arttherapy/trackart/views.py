@@ -5,54 +5,49 @@ from django.http import HttpResponse, HttpResponseRedirect
 
 ## from .forms import ArtTherapyForm
 ## from trackart import templates
-from .models import paintcolor
+from .models import art_client
+
 
 # Create your views here.
 class HomePageView(TemplateView):
    def get(self, request, **kwargs):
-      qcolor = paintcolor.objects.all()
-      ## lcolors = ', '.join([qrow.paintcolortitle for qrow in qcolor])
-      context = {
-         'qcolor': qcolor
+      '''
+      qcolor = paintcolor.objects.all().order_by('paintcolortitle')
+      '''
+      dfeatures = {
+         './viewclients': 'Client-centric View',
+         './aptmonth':  'Appointment-centric View',
       }
-      return render(request, 'index.html', context=context)
-   def post(self, request, **kwargs):
-      return render(request, 'indexpost.html', context=None)
-   
-    
-'''
+      context = {
+         'dfeatures': dfeatures
+      }
+      return render(request, 'trackart/index.html', context=context)
 
-class AboutPageView(TemplateView):
-	def get(self, request, **kwargs):
-		return render(request, 'about.html', context=None)
+ 
+class ClientCentricListView(TemplateView):
+   def get(self, request, **kwargs):
+      qclient = art_client.objects.all().order_by('art_clientlastname','art_clientfirstname')
+      context = {
+         'qclient': qclient
+      }
+      return render(request, 'trackart/clientlist.html', context=context)
 
-class FinkPageView(TemplateView):
-	def get(self, request, **kwargs):
-		return render(request, 'Fink.html', context=None)
 
-class artTherapyPageView(TemplateView):
-	def get(self, request, **kwargs):  # get_name(request):
-		# if this is a POST request we need to process the form data
-		form = ArtTherapyForm() ## initial={'your_name':'Dan','your_therapist':'Joe Steveson'}
-		return render(request, 'arty.html', {'form': form})
+class AppointmentCentricListView(TemplateView):
+   def get(self, request, **kwargs):
+      return render(request, 'trackart/appointmentlist.html') ##, context=context
 
-	def post(self, request, **kwargs):
-		# create a form instance and populate it with data from the request:
-		form = ArtTherapyForm(request.POST)
-		# check whether it's valid:
-		if form.is_valid():
-			# process the data in form.cleaned_data as required
-			# ...
-			# redirect to a new URL:
-			return HttpResponseRedirect('/thanks/')
-		else:
-			## print shows up in the SERVER (commandline)..
-			### print( form.changed_data )
-			return render(request, 'arty.html', {'form': form})
-	
 
-class thanksPageView(TemplateView):
-	def get(self, request, **kwargs):
-		return render(request, 'thanks.html', context=None)
+class ClientOneView(TemplateView):
+   def get(self, request, art_client_id):
+      qsclient = art_client.objects.all() ##pk=art_client_id
+      if len(qsclient) == 1:
+         qrow = qsclient[0]
+         context = {
+            'qoneclient': qrow,
+            'id': art_client_id
+         }
+      else:
+         context = {}
+      return render(request, 'trackart/clientone.html', context=context)
 
-'''
