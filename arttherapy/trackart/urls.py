@@ -1,15 +1,15 @@
 # boards/urls.py
-from django.conf.urls import url
-from trackart import views
 
-## 	url(r'^$', views.HomePageView, name='home'), ## .as_view()),
+from django.urls import path
+from . import views
 
 urlpatterns = [
-	url(r'^$', views.HomePageView.as_view()),
-	## url(r'^about/$', views.AboutPageView.as_view()),
-	## url(r'^fink/$', views.FinkPageView.as_view()),
-	## url(r'^arty/$', views.artTherapyPageView.as_view()),
-	## url(r'^thanks/$', views.thanksPageView.as_view()),
+	path('', views.HomePageView.as_view()),
+	path('viewclients', views.ClientCentricListView.as_view()),
+	path('aptmonth', views.AppointmentCentricListView.as_view()),
+	
+	path('client/<int:art_client_id>', views.ClientOneView.as_view(), name='viewoneclient')
 ]
 
+###path('client/<int:art_client_id>', views.ClientOneView.as_view()),
 	
