@@ -1,20 +1,24 @@
-<!DOCTYPE html>
+{% comment %}
+EXPECTED INCOMING PARAMETERS:
+   qsappointment  -query of appointment data
+{% endcomment %}<!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8">
-        <title>TrackArt Application</title>
+        <title>TrackArt:  Appointment-Centric View</title>
     </head>
     <body>
-        <h1>TrackArt Appointments</h1>
+        <h1>TrackArt Appointment-Centric View</h1>
         <p><a href="/">Back to Index</a></p>
-{% if dfeatures %}
-   <ul>
-   {% for key, value in dfeatures.items %}
-   	<li><a href="{{ key }}">{{ value }}</a></li>
+
+{% if qsappointment %}
+   <ol>
+   {% for qrow in qsappointment %}
+     <li><a href="./appointment/{{ qrow.id }}">{{ qrow }}</a></li>
    {% endfor %}
-   </ul>
+   </ol>
 {% else %}
-   <p><em>No Features Implemented</em></p>
+   <p><em>No appointments returned</em></p>
 {% endif %}
 
     </body>
