@@ -1,0 +1,35 @@
+{% comment %}
+EXPECTED INCOMING PARAMETERS:
+   qoneappointment  -query of appointment data
+   pkid     -appointment table's PKid
+   qspainting
+{% endcomment %}<!DOCTYPE html>
+<html>
+   <head>
+        <meta charset="utf-8">
+        <title>TrackArt:  Appointment-Centric View</title>
+   </head>
+   <body>
+        <h1>TrackArt Appointment {{ pkid }}:</h1>
+        <p><a href="/">Back to Index</a></p>
+
+   {% if qoneappointment %}
+
+      <h3>{{ qoneappointment }}</h3>
+      {% if qspainting %}
+         <h4>Paintings</h4>
+         <ol>
+            {% for qp in qspainting %}
+              <li><a href="/painting/{{ qp.id }}">Created at {{ qp.createDate }}</a></li>
+            {% endfor %}
+         </ol>
+      {% else %}
+         <h4 class="none">No Paintings</h4>
+      {% endif %}
+      
+
+   {% else %}
+      <h3 class="error">Appointment not found</h3>
+   {% endif %}
+   </body>
+</html>
