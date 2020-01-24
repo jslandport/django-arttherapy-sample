@@ -1,0 +1,7 @@
+h1, h2, h3, h4 { color:#900 }
+
+.generalnav { text-align:right; border-bottom:1px solid #999; margin-bottom:4px; font-style:italic }
+
+.none { font-style:italic; color:#888 }
+
+.error { font-weight:bold; color:#f00 }
