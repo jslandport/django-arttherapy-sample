@@ -8,6 +8,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from .models import art_client
 from .models import art_appointment
 from .models import art_painting
+from .models import art_paintingXpaintcolor
+from .models import art_paintingXclientmood
 
 
 # Create your views here.
@@ -83,10 +85,12 @@ class PaintingOneView(TemplateView):
       qspainting = art_painting.objects.filter(pk=art_painting_id)
       if len(qspainting) == 1:
          qrow = qspainting[0]
-         ### qspainting = art_painting.objects.filter(art_paintingid = art_painting_id)
+         qsxpaintcolor = art_paintingXpaintcolor.objects.filter(art_paintingid = art_painting_id)
+         qsxclientmood = art_paintingXclientmood.objects.filter(art_paintingid = art_painting_id)
          context = {
             'qonepainting': qrow,
-            ###'qspainting': qspainting,
+            'qsxpaintcolor': qsxpaintcolor,
+            'qsxclientmood': qsxclientmood,
             'pkid': art_painting_id
          }
       else:
