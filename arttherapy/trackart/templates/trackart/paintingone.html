@@ -1,0 +1,50 @@
+{% comment %}
+EXPECTED INCOMING PARAMETERS:
+   qonepainting  -query of client data
+   pkid     -painting's PKid
+   qsxpaintcolor   \_ 1xmany connections with this painting
+   qsxclientmood   /
+{% endcomment %}<!DOCTYPE html>
+<html>
+   <head>
+        <meta charset="utf-8">
+        <title>TrackArt:  One Painting</title>
+        {% include "trackart/part_headtemplate.html" %}
+   </head>
+   <body>
+        {% include "trackart/part_bodytemplate.html" %}
+        <h1>TrackArt Painting {{ pkid }}:</h1>
+        <p><a href="/appointment/{{ qonepainting.art_appointmentid.pk }}">Back to Appointment</a> &mdash; <a href="/">Back to Index</a></p>
+
+   {% if qonepainting %}
+
+      <h3>{{ qonepainting }}</h3>
+
+      {% if qsxpaintcolor %}
+         <h4>Color(s) used in painting:</h4>
+         <ol>
+            {% for qa in qsxpaintcolor %}
+              <li>{{ qa.paintcolorid }}</li>
+            {% endfor %}
+         </ol>
+      {% else %}
+         <h4 class="none">No Colors listed</h4>
+      {% endif %}
+      
+      {% if qsxclientmood %}
+         <h4>Mood(s) during painting:</h4>
+         <ol>
+            {% for qa in qsxclientmood %}
+              <li>{{ qa.clientmoodid }}</li>
+            {% endfor %}
+         </ol>
+      {% else %}
+         <h4 class="none">No Moods listed</h4>
+      {% endif %}
+      
+
+   {% else %}
+      <h3 class="none">Painting not found</h3>
+   {% endif %}
+   </body>
+</html>
