@@ -1,21 +1,22 @@
 from django import forms
 
-mytuple = [('BF', 'before'), ('DU','during'), ('AF','after')]
+### mytuple = [('BF', 'before'), ('DU','during'), ('AF','after')]
 
-class ArtTherapyForm(forms.Form):
+class OneClientForm(forms.Form):
    ## d = {"one": 1, "two": 2, "Three":3 }
-   
-   your_name = forms.CharField(label='Your name', max_length=100)
-   your_therapist = forms.CharField(label='Your Therapist', max_length=100)
-   visit_number = forms.IntegerField(label='Visit Number', min_value=0, max_value=100)
-   visit_date = forms.DateField(
-      label='Visit Date',
+   art_clientfirstname = forms.CharField(label='First Name', max_length=50)
+   art_clientlastname = forms.CharField(label='Last Name', max_length=50)
+   art_clientdob = forms.DateField(
+      label='Date of Birth',
       input_formats=[
          '%m/%d/%Y',
          '%m/%d/%y',
          '%m-%d-%y'
        ]
    )
+   
+   
+   '''
    drawing_completed = forms.NullBooleanField(label='Drawing Completed')
    which_drawing = forms.ChoiceField(
    	choices=mytuple,
@@ -25,6 +26,7 @@ class ArtTherapyForm(forms.Form):
    	widget=forms.RadioSelect
    )
    ## colors_used = forms.MultipleChoiceField()
+   '''
    
    
    '''
