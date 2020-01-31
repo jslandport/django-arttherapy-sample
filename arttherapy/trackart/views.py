@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.http import HttpResponse, HttpResponseRedirect
 
-## from .forms import ArtTherapyForm
+from .forms import OneClientForm
 ## from trackart import templates
 from .models import art_client
 from .models import art_appointment
@@ -59,9 +59,62 @@ class ClientOneView(TemplateView):
             'qsappointment': qsapt,
             'pkid': art_client_id
          }
+         return render(request, 'trackart/clientone.html', context=context)
+
+
+class ClientOneNew(TemplateView):
+   def get(self, request):
+      form = OneClientForm()
+      context = {
+         'form': form
+      }
+      return render(request, 'trackart/clientwrite.html', context=context)
+
+
+
+class ClientOneWrite(TemplateView):
+   def get(self, request):
+      form = OneClientForm()
+      context = {
+         'form': form
+      }
+      return render(request, 'trackart/clientwrite.html', context=context)
+
+   def get(self, request, art_client_id):
+      qsclient = art_client.objects.filter(pk=art_client_id)
+      if len(qsclient) == 1:
+         qrow = qsclient[0]
+         data = {
+            'art_clientfirstname': qrow.art_clientfirstname,
+            'art_clientlastname': qrow.art_clientlastname,
+            'art_clientdob': qrow.art_clientdob
+         }
+         form = OneClientForm(data)
+         context = {
+            'qoneclient': qrow,
+            'pkid': art_client_id,
+            'form': form
+         }
+         return render(request, 'trackart/clientwrite.html', context=context)
+
+   def post(self, request):
+      form = OneClientForm(request.POST)
+      if form.is_valid():
+         ## process;
+         return HttpResponseRedirect('/client/' + thisid);
       else:
-         context = {}
-      return render(request, 'trackart/clientone.html', context=context)
+         ## send them back to the form:
+         return HttpResponseRedirect('/clientwrite/');
+
+
+   def post(self, request, art_client_id):
+      form = OneClientForm(request.POST)
+      if form.is_valid():
+         ## process;
+         return HttpResponseRedirect('/client/' + art_client_id);
+      else:
+         ## send them back to the form:
+         return HttpResponseRedirect('/clientwrite/');
 
 
 class AppointmentOneView(TemplateView):
