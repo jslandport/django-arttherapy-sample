@@ -1,0 +1,32 @@
+{% comment %}
+OPTIONAL INCOMING PARAMETERS (for Edits):
+   qoneclient  -query of client data
+   pkid     -client table's PKid
+{% endcomment %}<!DOCTYPE html>
+<html>
+   <head>
+        <meta charset="utf-8">
+        <title>TrackArt:  Write Client</title>
+        {% include "trackart/part_headtemplate.html" %}
+   </head>
+   <body>
+      {% include "trackart/part_bodytemplate.html" %}
+      <h1>TrackArt Client {{ pkid }}:</h1>
+      <p><a href="/">Back to Index</a></p>
+      
+      {% if pkid %}
+         <h3>Client Id {{ pkid }}
+         <form action="/client/{{ pkid }}" method="post">
+      {% else %}
+         <h3>New Client</h3>
+         <form action="/client/" method="post">
+      {% endif %}
+		
+		{% csrf_token %}
+		{{ form.as_p }}
+		<div><input type="submit" value="Go"/></div>     
+   
+      </form>
+
+   </body>
+</html>

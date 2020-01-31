@@ -3,15 +3,18 @@ EXPECTED INCOMING PARAMETERS:
    qclient  -query of client data
 {% endcomment %}<!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>TrackArt:  Client-Centric View</title>
-        {% include "trackart/part_headtemplate.html" %}
-    </head>
-    <body>
-        {% include "trackart/part_bodytemplate.html" %}
-        <h1>TrackArt Client-Centric View</h1>
-        <p><a href="/">Back to Index</a></p>
+   <head>
+      <meta charset="utf-8">
+      <title>TrackArt:  Client-Centric View</title>
+      {% include "trackart/part_headtemplate.html" %}
+   </head>
+   <body>
+      {% include "trackart/part_bodytemplate.html" %}
+      <h1>TrackArt Client-Centric View</h1>
+      <p>
+         <div><a href="/clientwrite">Add a Client</a></div>
+         <div><a href="/">Back to Index</a></div>
+      </p>
 
 {% if qclient %}
    <ul>
