@@ -11,31 +11,34 @@ EXPECTED INCOMING PARAMETERS:
         {% include "trackart/part_headtemplate.html" %}
    </head>
    <body>
-        {% include "trackart/part_bodytemplate.html" %}
-        <h1>TrackArt Client {{ pkid }}:</h1>
-        <p><a href="/">Back to Index</a></p>
+      {% include "trackart/part_bodytemplate.html" %}
+      <h1>TrackArt Client {{ pkid }}:</h1>
+      <p>
+         <div><a href="/clientwrite/{{ pkid }}">Edit Client</a></div>
+         <div><a href="/">Back to Index</a></div>
+      </p>
 
-   {% if qoneclient %}
-
-      <h3>{{ qoneclient.art_clientfirstname }}
-         {{ qoneclient.art_clientlastname }}
-      </h3>
-      <div>DOB: {{ qoneclient.art_clientdob }}</div>
-
-      {% if qsappointment %}
-         <h4>Appointments</h4>
-         <ol>
-            {% for qa in qsappointment %}
-              <li><a href="/appointment/{{ qa.id }}">{{ qa.art_appointmenttime }}</a></li>
-            {% endfor %}
-         </ol>
-      {% else %}
-         <h4 class="none">No Appointments</h4>
-      {% endif %}
+      {% if qoneclient %}
       
-
-   {% else %}
-      <h3 class="error">Client not found</h3>
-   {% endif %}
+         <h3>{{ qoneclient.art_clientfirstname }}
+            {{ qoneclient.art_clientlastname }}
+         </h3>
+         <div>DOB: {{ qoneclient.art_clientdob }}</div>
+      
+         {% if qsappointment %}
+            <h4>Appointments</h4>
+            <ol>
+               {% for qa in qsappointment %}
+                 <li><a href="/appointment/{{ qa.id }}">{{ qa.art_appointmenttime }}</a></li>
+               {% endfor %}
+            </ol>
+         {% else %}
+            <h4 class="none">No Appointments</h4>
+         {% endif %}
+         
+      
+      {% else %}
+         <h3 class="error">Client not found</h3>
+      {% endif %}
    </body>
 </html>
