@@ -12,6 +12,9 @@ urlpatterns = [
 	path('client/<int:art_client_id>', views.ClientOneView.as_view()),
    path('clientnew', views.ClientOneNew.as_view()),
 	path('clientwrite/<int:art_client_id>', views.ClientOneWrite.as_view()),
+	
+	path('clientnotfound', views.ClientNotFound.as_view()),
+	
 	path('appointment/<int:art_appointment_id>', views.AppointmentOneView.as_view()),
 	path('painting/<int:art_painting_id>', views.PaintingOneView.as_view())
 	
@@ -19,4 +22,3 @@ urlpatterns = [
 ]
 
 ###path('client/<int:art_client_id>', views.ClientOneView.as_view()),
-	
