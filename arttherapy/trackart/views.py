@@ -62,6 +62,13 @@ class ClientOneView(TemplateView):
          return render(request, 'trackart/clientone.html', context=context)
 
 
+class ClientNotFound(TemplateView):
+   def get(self, request):
+      return render(request, 'trackart/clientnotfound.html')
+      
+
+####
+
 class ClientOneNew(TemplateView):
    def get(self, request):
       form = OneClientForm()
@@ -70,16 +77,31 @@ class ClientOneNew(TemplateView):
       }
       return render(request, 'trackart/clientwrite.html', context=context)
 
+   def post(self, request):
+      theform = OneClientForm(request.POST)
+      if theform.is_valid():
+         ## process:
+         qc = art_client.objects.create(
+            art_clientfirstname = theform.cleaned_data.get("art_clientfirstname"),
+            art_clientlastname = theform.cleaned_data.get("art_clientlastname"),
+            art_clientdob = theform.cleaned_data.get("art_clientdob")
+         )
+         qc.save()
+         ## go back to client:
+         return HttpResponseRedirect('/client/' + str(qc.id));
+      else:
+         ## send them back to the form:
+         ##   >> REFACTOR >>  WHY DO I HAVE TO REPLICATE THIS IN THE 'GET' AND POST?
+         form = OneClientForm(request.POST)
+         context = {
+            'form': theform
+         }
+         return render(request, 'trackart/clientwrite.html', context=context)
 
+
+####     ####
 
 class ClientOneWrite(TemplateView):
-   def get(self, request):
-      form = OneClientForm()
-      context = {
-         'form': form
-      }
-      return render(request, 'trackart/clientwrite.html', context=context)
-
    def get(self, request, art_client_id):
       qsclient = art_client.objects.filter(pk=art_client_id)
       if len(qsclient) == 1:
@@ -96,17 +118,9 @@ class ClientOneWrite(TemplateView):
             'form': form
          }
          return render(request, 'trackart/clientwrite.html', context=context)
-
-   def post(self, request):
-      form = OneClientForm(request.POST)
-      if form.is_valid():
-         ## process;
-         return HttpResponseRedirect('/client/' + thisid);
       else:
-         ## send them back to the form:
-         return HttpResponseRedirect('/clientwrite/');
-
-
+         return HttpResponseRedirect('/clientnotfound')
+      
    def post(self, request, art_client_id):
       form = OneClientForm(request.POST)
       if form.is_valid():
@@ -114,8 +128,12 @@ class ClientOneWrite(TemplateView):
          return HttpResponseRedirect('/client/' + art_client_id);
       else:
          ## send them back to the form:
-         return HttpResponseRedirect('/clientwrite/');
+         return HttpResponseRedirect('/clientwrite/' + str(art_client_id) + '?=buh');
 
+
+
+
+#############################
 
 class AppointmentOneView(TemplateView):
    def get(self, request, art_appointment_id):
