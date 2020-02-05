@@ -11,7 +11,8 @@ class OneClientForm(forms.Form):
       input_formats=[
          '%m/%d/%Y',
          '%m-%d-%Y'
-       ]
+      ],
+      widget=forms.widgets.DateInput(format="%m/%d/%Y")
    )
    
    
