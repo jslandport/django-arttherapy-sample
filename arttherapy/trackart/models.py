@@ -14,7 +14,7 @@ NOTE - evidently you don't specify PKid-s, they're just "implicit", and you "imp
 class art_client(models.Model):
    art_clientfirstname = models.CharField(max_length=50)
    art_clientlastname = models.CharField(max_length=50)
-   art_clientdob = models.DateField()
+   art_clientdob = models.DateField(blank=False,null=False)
    createDate = models.DateTimeField( auto_now_add=True )
    lastupdated = models.DateTimeField( auto_now=True )
    ## 'summary' of a row, for various admin / display purposes baked into django
