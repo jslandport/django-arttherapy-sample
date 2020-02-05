@@ -78,13 +78,13 @@ class ClientOneNew(TemplateView):
       return render(request, 'trackart/clientwrite.html', context=context)
 
    def post(self, request):
-      theform = OneClientForm(request.POST)
-      if theform.is_valid():
+      thisform = OneClientForm(request.POST)
+      if thisform.is_valid():
          ## process:
          qc = art_client.objects.create(
-            art_clientfirstname = theform.cleaned_data.get("art_clientfirstname"),
-            art_clientlastname = theform.cleaned_data.get("art_clientlastname"),
-            art_clientdob = theform.cleaned_data.get("art_clientdob")
+            art_clientfirstname = thisform.cleaned_data.get("art_clientfirstname"),
+            art_clientlastname = thisform.cleaned_data.get("art_clientlastname"),
+            art_clientdob = thisform.cleaned_data.get("art_clientdob")
          )
          qc.save()
          ## go back to client:
@@ -94,7 +94,7 @@ class ClientOneNew(TemplateView):
          ##   >> REFACTOR >>  WHY DO I HAVE TO REPLICATE THIS IN THE 'GET' AND POST?
          form = OneClientForm(request.POST)
          context = {
-            'form': theform
+            'form': thisform
          }
          return render(request, 'trackart/clientwrite.html', context=context)
 
@@ -106,31 +106,48 @@ class ClientOneWrite(TemplateView):
       qsclient = art_client.objects.filter(pk=art_client_id)
       if len(qsclient) == 1:
          qrow = qsclient[0]
-         data = {
+         thisdata = {
             'art_clientfirstname': qrow.art_clientfirstname,
             'art_clientlastname': qrow.art_clientlastname,
             'art_clientdob': qrow.art_clientdob
          }
-         form = OneClientForm(data)
-         context = {
+         thisform = OneClientForm(thisdata)
+         thiscontext = {
             'qoneclient': qrow,
             'pkid': art_client_id,
-            'form': form
+            'form': thisform
          }
-         return render(request, 'trackart/clientwrite.html', context=context)
+         return render(request, 'trackart/clientwrite.html', context=thiscontext)
       else:
          return HttpResponseRedirect('/clientnotfound')
       
    def post(self, request, art_client_id):
-      form = OneClientForm(request.POST)
-      if form.is_valid():
+      thisform = OneClientForm(request.POST)
+      if thisform.is_valid():
          ## process;
-         return HttpResponseRedirect('/client/' + art_client_id);
+         art_client.objects.filter(id=art_client_id).update(
+            art_clientfirstname = thisform.cleaned_data.get("art_clientfirstname"),
+            art_clientlastname = thisform.cleaned_data.get("art_clientlastname"),
+            art_clientdob = thisform.cleaned_data.get("art_clientdob")
+         )
+         ##qc.save()
+         return HttpResponseRedirect('/client/' + str(art_client_id));
       else:
-         ## send them back to the form:
-         return HttpResponseRedirect('/clientwrite/' + str(art_client_id) + '?=buh');
-
-
+         ##   >> REFACTOR >>  WHY DO I HAVE TO REPLICATE THIS IN THE 'GET' AND POST?
+         thisdata = {
+            'art_clientfirstname': thisform.cleaned_data.get("art_clientfirstname"),
+            'art_clientlastname': thisform.cleaned_data.get("art_clientlastname"),
+            'art_clientdob': thisform.cleaned_data.get("art_clientdob")
+         }
+         thisform = OneClientForm(thisdata)
+         thiscontext = {
+            ###'qoneclient': qrow,
+            'pkid': art_client_id,
+            'form': thisform
+         }
+         return render(request, 'trackart/clientwrite.html', context=thiscontext)
+         
+         
 
 
 #############################
