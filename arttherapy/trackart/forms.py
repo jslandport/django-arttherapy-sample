@@ -10,10 +10,11 @@ class OneClientForm(forms.Form):
       label='Date of Birth',
       input_formats=[
          '%m/%d/%Y',
-         '%m/%d/%y',
-         '%m-%d-%y'
+         '%m-%d-%Y'
        ]
    )
+   
+   
    
    
    '''
