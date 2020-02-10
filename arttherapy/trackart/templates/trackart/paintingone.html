@@ -15,6 +15,8 @@ EXPECTED INCOMING PARAMETERS:
       {% include "trackart/part_bodytemplate.html" %}
       <h1>TrackArt Painting {{ pkid }}:</h1>
       <div class="series">
+         <div><a href="/appointment/{{ qonepainting.art_appointmentid.pk }}/paintingwrite/{{ pkid }}">Edit Painting</a></div>
+         <div><a href="/appointment/{{ qonepainting.art_appointmentid.pk }}/paintingdelete/{{ pkid }}" onclick="return confirm('This will DELETE this painting\n\nOK to DELETE, Cancel to stop')">Delete Painting</a></div>
          <div><a href="/appointment/{{ qonepainting.art_appointmentid.pk }}">Back to Appointment</a></div>
          <div><a href="/">Back to Index</a></div>
       </div>
