@@ -8,21 +8,26 @@ urlpatterns = [
 	path('viewclients', views.ClientCentricListView.as_view()),
 	path('viewappointments', views.AppointmentCentricListView.as_view()),
 	
-	## view 1 record:
-	path('client/<int:art_client_id>', views.ClientOneView.as_view()),
-   path('clientnew', views.ClientOneNew.as_view()),
-	path('clientwrite/<int:art_client_id>', views.ClientOneWrite.as_view()),
-	path('clientdelete/<int:art_client_id>', views.ClientOneDelete.as_view()),
+	## CLIENT
+	path('client/<int:art_client_id>', views.ClientView.as_view()),
+   path('clientnew', views.ClientNew.as_view()),
+	path('clientwrite/<int:art_client_id>', views.ClientWrite.as_view()),
+	path('clientdelete/<int:art_client_id>', views.ClientDelete.as_view()),
 	path('clientnotfound', views.ClientNotFound.as_view()),
 	
-	path('appointment/<int:art_appointment_id>', views.AppointmentOneView.as_view()),
-	path('appointmentnew', views.AppointmentOneNew.as_view()),
-   path('appointmentwrite/<int:art_appointment_id>', views.AppointmentOneWrite.as_view()),
-	path('appointmentdelete/<int:art_appointment_id>', views.AppointmentOneDelete.as_view()),
+	## APPOINTMENT
+	path('appointment/<int:art_appointment_id>', views.AppointmentView.as_view()),
+	path('appointmentnew', views.AppointmentNew.as_view()),
+   path('appointmentwrite/<int:art_appointment_id>', views.AppointmentWrite.as_view()),
+	path('appointmentdelete/<int:art_appointment_id>', views.AppointmentDelete.as_view()),
 	
-	path('painting/<int:art_painting_id>', views.PaintingOneView.as_view())
+	## PAINTING
+	path('appointment/<int:art_appointment_id>/painting/<int:art_painting_id>', views.PaintingView.as_view()),
+	path('appointment/<int:art_appointment_id>/paintingnew', views.PaintingNew.as_view()),
+	path('appointment/<int:art_appointment_id>/paintingwrite/<int:art_painting_id>', views.PaintingWrite.as_view()),
+	path('appointment/<int:art_appointment_id>/paintingdelete/<int:art_painting_id>', views.PaintingDelete.as_view())
 	
 	## add/edit records(?)
 ]
 
-###path('client/<int:art_client_id>', views.ClientOneView.as_view()),
+###path('client/<int:art_client_id>', views.ClientView.as_view()),
