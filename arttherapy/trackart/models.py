@@ -23,7 +23,7 @@ class art_client(models.Model):
    
 class art_appointment(models.Model):
    art_clientid = models.ForeignKey(art_client, on_delete=models.CASCADE)
-   art_appointmenttime = models.DateTimeField()
+   art_appointmenttime = models.DateTimeField( blank=False, null=False )
    ## 'summary' of a row, for various admin / display purposes baked into django
    def __str__(self):
       return str(self.art_clientid)+' at '+str(self.art_appointmenttime)
