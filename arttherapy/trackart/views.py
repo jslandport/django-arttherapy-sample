@@ -4,12 +4,20 @@ from django.views.generic import TemplateView
 from django.http import HttpResponse, HttpResponseRedirect
 
 from .forms import OneClientForm
+from .forms import OneAppointmentForm
 ## from trackart import templates
 from .models import art_client
 from .models import art_appointment
 from .models import art_painting
 from .models import art_paintingXpaintcolor
 from .models import art_paintingXclientmood
+
+
+#############################
+##
+##    BASICS
+##
+
 
 
 # Create your views here.
@@ -20,7 +28,7 @@ class HomePageView(TemplateView):
       '''
       dfeatures = {
          './viewclients': 'Client-centric View',
-         './aptmonth':  'Appointment-centric View',
+         './viewappointments':  'Appointment-centric View',
       }
       context = {
          'dfeatures': dfeatures
@@ -67,7 +75,12 @@ class ClientNotFound(TemplateView):
       return render(request, 'trackart/clientnotfound.html')
       
 
-####
+
+#############################
+##
+##    CLIENT - WRITE
+##
+
 
 class ClientOneNew(TemplateView):
    def get(self, request):
@@ -99,7 +112,8 @@ class ClientOneNew(TemplateView):
          return render(request, 'trackart/clientwrite.html', context=context)
 
 
-####     ####
+###
+###
 
 class ClientOneWrite(TemplateView):
    def get(self, request, art_client_id):
@@ -141,16 +155,29 @@ class ClientOneWrite(TemplateView):
          }
          thisform = OneClientForm(thisdata)
          thiscontext = {
-            ###'qoneclient': qrow,
             'pkid': art_client_id,
             'form': thisform
          }
          return render(request, 'trackart/clientwrite.html', context=thiscontext)
          
-         
+
+####
+class ClientOneDelete(TemplateView):
+   def get(self, request, art_client_id):
+      art_client.objects.filter(id=art_client_id).delete()
+      return HttpResponseRedirect('/viewclients')
+   
+
+##
+## /client write
+##
+
 
 
 #############################
+##
+##    APPOINTMENTS - WRITE
+##
 
 class AppointmentOneView(TemplateView):
    def get(self, request, art_appointment_id):
@@ -167,6 +194,101 @@ class AppointmentOneView(TemplateView):
          context = {}
       return render(request, 'trackart/appointmentone.html', context=context)
 
+
+class AppointmentOneNew(TemplateView):
+   def get(self, request):
+      thisdata = {}
+      if 'art_clientid' in request.GET.keys():
+         thisdata['art_clientid'] = request.GET['art_clientid']
+      thisform = OneAppointmentForm(thisdata)
+      context = {
+         'form': thisform
+      }
+      return render(request, 'trackart/appointmentwrite.html', context=context)
+
+   def post(self, request):
+      thisform = OneAppointmentForm(request.POST)
+      if thisform.is_valid():
+         ## process:
+         print(thisform.cleaned_data.get('art_appointmenttime'))
+         qa = art_appointment.objects.create(
+            art_clientid = thisform.cleaned_data.get("art_clientid"),
+            art_appointmenttime = thisform.cleaned_data.get("art_appointmenttime")
+         )
+         qa.save()
+         ## go to Appointment:
+         return HttpResponseRedirect('/appointment/' + str(qa.id));
+      else:
+         ## send them back to the form:
+         ##   >> REFACTOR >>  WHY DO I HAVE TO REPLICATE THIS IN THE 'GET' AND POST?
+         form = OneAppointmentForm(request.POST)
+         context = {
+            'form': thisform
+         }
+         return render(request, 'trackart/appointmentwrite.html', context=context)
+
+
+###
+
+class AppointmentOneWrite(TemplateView):
+   def get(self, request, art_appointment_id):
+      qsappointment = art_appointment.objects.filter(pk=art_appointment_id)
+      if len(qsappointment) == 1:
+         qrow = qsappointment[0]
+         thisdata = {
+            'art_clientid': qrow.art_clientid.pk,
+            'art_appointmenttime': qrow.art_appointmenttime
+         }
+         print(thisdata)
+         thisform = OneAppointmentForm(thisdata)
+         thiscontext = {
+            'qoneappointment': qrow,
+            'pkid': art_appointment_id,
+            'form': thisform
+         }
+         return render(request, 'trackart/appointmentwrite.html', context=thiscontext)
+      else:
+         return HttpResponseRedirect('/appointmentnotfound')
+      
+   def post(self, request, art_appointment_id):
+      thisform = OneAppointmentForm(request.POST)
+      if thisform.is_valid():
+         ## process;
+         art_appointment.objects.filter(id=art_appointment_id).update(
+            art_clientid = thisform.cleaned_data.get("art_clientid"),
+            art_appointmenttime = thisform.cleaned_data.get("art_appointmenttime")
+         )
+         ##qc.save()
+         return HttpResponseRedirect('/appointment/' + str(art_appointment_id));
+      else:
+         ##   >> REFACTOR >>  WHY DO I HAVE TO REPLICATE THIS IN THE 'GET' AND POST?
+         thisdata = {
+            'art_clientid': thisform.cleaned_data.get("art_clientid"),
+            'art_appointmenttime': thisform.cleaned_data.get("art_appointmenttime")
+         }
+         thisform = OneAppointmentForm(thisdata)
+         thiscontext = {
+            'pkid': art_appointment_id,
+            'form': thisform
+         }
+         return render(request, 'trackart/appointmentwrite.html', context=thiscontext)
+
+
+##
+
+class AppointmentOneDelete(TemplateView):
+   def get(self, request, art_appointment_id):
+      art_appointment.objects.filter(id=art_appointment_id).delete()
+      return HttpResponseRedirect('/viewappointments')
+
+
+
+##
+## /appointments write
+##
+
+
+#####
 
 class PaintingOneView(TemplateView):
    def get(self, request, art_painting_id):
