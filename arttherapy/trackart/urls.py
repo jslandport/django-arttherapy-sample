@@ -6,16 +6,20 @@ from . import views
 urlpatterns = [
 	path('', views.HomePageView.as_view()),
 	path('viewclients', views.ClientCentricListView.as_view()),
-	path('aptmonth', views.AppointmentCentricListView.as_view()),
+	path('viewappointments', views.AppointmentCentricListView.as_view()),
 	
 	## view 1 record:
 	path('client/<int:art_client_id>', views.ClientOneView.as_view()),
    path('clientnew', views.ClientOneNew.as_view()),
 	path('clientwrite/<int:art_client_id>', views.ClientOneWrite.as_view()),
-	
+	path('clientdelete/<int:art_client_id>', views.ClientOneDelete.as_view()),
 	path('clientnotfound', views.ClientNotFound.as_view()),
 	
 	path('appointment/<int:art_appointment_id>', views.AppointmentOneView.as_view()),
+	path('appointmentnew', views.AppointmentOneNew.as_view()),
+   path('appointmentwrite/<int:art_appointment_id>', views.AppointmentOneWrite.as_view()),
+	path('appointmentdelete/<int:art_appointment_id>', views.AppointmentOneDelete.as_view()),
+	
 	path('painting/<int:art_painting_id>', views.PaintingOneView.as_view())
 	
 	## add/edit records(?)
