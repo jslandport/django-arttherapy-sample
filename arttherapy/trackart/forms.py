@@ -1,4 +1,6 @@
 from django import forms
+from .models import art_client
+
 
 ### mytuple = [('BF', 'before'), ('DU','during'), ('AF','after')]
 
@@ -17,6 +19,18 @@ class OneClientForm(forms.Form):
    
    
    
+class OneAppointmentForm(forms.Form):
+   qc = art_client.objects.all().order_by('art_clientlastname','art_clientfirstname')
+   art_clientid = forms.ModelChoiceField(queryset=qc, label='Client', empty_label="Pick a Client")
+   art_appointmenttime = forms.DateTimeField(
+      label='Appointment Date/Time',
+      input_formats=[
+         '%m/%d/%Y %H:%M',
+         '%m-%d-%Y %H:%M'
+      ],
+      widget=forms.widgets.DateInput(format="%m/%d/%Y %H:%M")
+   )
+
    
    '''
    drawing_completed = forms.NullBooleanField(label='Drawing Completed')
@@ -46,6 +60,8 @@ class OneClientForm(forms.Form):
    		    	)
    '''
    	
+
+   '''
    ### 
    def clean_which_drawing(self):
    	data = self.cleaned_data['which_drawing']
@@ -55,4 +71,4 @@ class OneClientForm(forms.Form):
    		    'your choice, ' + data + ', isn\'t the last one, you\'ll need to do more',
    		    code='invalid',
    		 	)
-   
+   '''
