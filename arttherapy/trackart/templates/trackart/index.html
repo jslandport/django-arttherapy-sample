@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>TrackArt Application</title>
-        {% include "trackart/part_headtemplate.html" %}
-    </head>
-    <body>
-        {% include "trackart/part_bodytemplate.html" %}
+   <head>
+      <meta charset="utf-8">
+      <title>TrackArt Application</title>
+      {% include "trackart/part_headtemplate.html" %}
+   </head>
+   <body>
+      {% include "trackart/part_bodytemplate.html" %}
         
-        <h1>TrackArt Landing Page</h1>
-        <p>Task:</p>
-{% if dfeatures %}
-   <ul>
-   {% for key, value in dfeatures.items %}
-   	<li><a href="{{ key }}">{{ value }}</a></li>
-   {% endfor %}
-   </ul>
-{% else %}
-   <p><em>No Features Implemented</em></p>
-{% endif %}
-
-    </body>
+      <h1>TrackArt Landing Page</h1>
+      {% if dfeatures %}
+         <div class="series">
+            <div>Features:</div>
+            {% for key, value in dfeatures.items %}
+            	<div><a href="{{ key }}">{{ value }}</a></div>
+            {% endfor %}
+         </div>
+         <div class="postseries"></div>
+      {% else %}
+         <p><em>No Features Implemented</em></p>
+      {% endif %}
+   </body>
 </html>

@@ -13,10 +13,12 @@ EXPECTED INCOMING PARAMETERS:
    <body>
       {% include "trackart/part_bodytemplate.html" %}
       <h1>TrackArt Client {{ pkid }}:</h1>
-      <p>
+      <div class="series">
          <div><a href="/clientwrite/{{ pkid }}">Edit Client</a></div>
-         <div><a href="/">Back to Index</a></div>
-      </p>
+         <div><a href="/clientdelete/{{ pkid }}" onclick="return confirm('This will delete this client\n\nOK to DELETE, Cancel to stop')">Delete Client</a></div>
+         <div><a href="/viewclients">Back to Client-Centric View</a></div>
+      </div>
+      <div class="postseries"></div>
 
       {% if qoneclient %}
       
@@ -27,6 +29,7 @@ EXPECTED INCOMING PARAMETERS:
       
          {% if qsappointment %}
             <h4>Appointments</h4>
+            <div><a href="/appointmentnew?art_clientid={{ pkid }}">Add an Appointment</div>
             <ol>
                {% for qa in qsappointment %}
                  <li><a href="/appointment/{{ qa.id }}">{{ qa.art_appointmenttime }}</a></li>
@@ -34,6 +37,7 @@ EXPECTED INCOMING PARAMETERS:
             </ol>
          {% else %}
             <h4 class="none">No Appointments</h4>
+            <div><a href="/appointmentnew?art_clientid={{ pkid }}">Add an Appointment</div>
          {% endif %}
          
       

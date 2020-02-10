@@ -12,9 +12,13 @@ EXPECTED INCOMING PARAMETERS:
         {% include "trackart/part_headtemplate.html" %}
    </head>
    <body>
-        {% include "trackart/part_bodytemplate.html" %}
-        <h1>TrackArt Painting {{ pkid }}:</h1>
-        <p><a href="/appointment/{{ qonepainting.art_appointmentid.pk }}">Back to Appointment</a> &mdash; <a href="/">Back to Index</a></p>
+      {% include "trackart/part_bodytemplate.html" %}
+      <h1>TrackArt Painting {{ pkid }}:</h1>
+      <div class="series">
+         <div><a href="/appointment/{{ qonepainting.art_appointmentid.pk }}">Back to Appointment</a></div>
+         <div><a href="/">Back to Index</a></div>
+      </div>
+      <div class="postseries"></div>
 
    {% if qonepainting %}
 

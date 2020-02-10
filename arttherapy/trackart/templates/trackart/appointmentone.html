@@ -11,27 +11,38 @@ EXPECTED INCOMING PARAMETERS:
         {% include "trackart/part_headtemplate.html" %}
    </head>
    <body>
-        {% include "trackart/part_bodytemplate.html" %}
-        <h1>TrackArt Appointment {{ pkid }}:</h1>
-        <p><a href="/">Back to Index</a></p>
+      {% include "trackart/part_bodytemplate.html" %}
+      <h1>TrackArt Appointment {{ pkid }}:</h1>
+      <div class="series">
+         <div><a href="/appointmentwrite/{{ pkid }}">Edit Appointment</a></div>
+         <div><a href="/appointmentdelete/{{ pkid }}" onclick="return confirm('This will Delete this appointment\n\nOK to DELETE, Cancel to stop')">Delete Appointment</a></div>
+         <div><a href="/client/{{ qoneappointment.art_clientid.pk }}">Back to Client</a></div>
+         <div><a href="/viewappointments">Back to Appointment-Centric View</a></div>
+      </div>
+      <div class="postseries"></div>
 
-   {% if qoneappointment %}
-
-      <h3>{{ qoneappointment }}</h3>
-      {% if qspainting %}
-         <h4>Paintings</h4>
-         <ol>
-            {% for qp in qspainting %}
-              <li><a href="/painting/{{ qp.id }}">Created at {{ qp.createDate }}</a></li>
-            {% endfor %}
-         </ol>
+      {% if qoneappointment %}
+   
+         <h3>
+            Appointment for
+            {{ qoneappointment.art_clientid.art_clientfirstname }}
+            {{ qoneappointment.art_clientid.art_clientlastname }},
+            at {{ qoneappointment.art_appointmenttime }}
+         </h3>
+         {% if qspainting %}
+            <h4>Paintings</h4>
+            <ol>
+               {% for qp in qspainting %}
+                 <li><a href="/painting/{{ qp.id }}">Created at {{ qp.createDate }}</a></li>
+               {% endfor %}
+            </ol>
+         {% else %}
+            <h4 class="none">No Paintings</h4>
+         {% endif %}
+         
+   
       {% else %}
-         <h4 class="none">No Paintings</h4>
+         <h3 class="error">Appointment not found</h3>
       {% endif %}
-      
-
-   {% else %}
-      <h3 class="error">Appointment not found</h3>
-   {% endif %}
    </body>
 </html>
