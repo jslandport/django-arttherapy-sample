@@ -241,7 +241,6 @@ class AppointmentWrite(TemplateView):
             'art_clientid': qrow.art_clientid.pk,
             'art_appointmenttime': qrow.art_appointmenttime
          }
-         print(thisdata)
          thisform = AppointmentForm(thisdata)
          thiscontext = {
             'qoneappointment': qrow,
@@ -329,12 +328,8 @@ class PaintingNew(TemplateView):
 
    def post(self, request, art_appointment_id):
       thisform = PaintingForm(request.POST)
-      print('----------')
-      print(art_appointment.objects.filter(pk = art_appointment_id))
-      print('----------')
-      print('----------')
       if thisform.is_valid():
-         print(thisform.cleaned_data.get('art_paintingXpaintcolor'))
+         #print(thisform.cleaned_data.get('art_paintingXpaintcolor'))
          ## process:
          ## 1) write the painting:
          qpaint = art_painting.objects.create(
@@ -350,9 +345,8 @@ class PaintingNew(TemplateView):
             )
             qxcolor.save()
          ## go to Painting:
-         return HttpResponseRedirect('/painting/' + str(qpaint.id));
+         return HttpResponseRedirect('/appointment/' + str(art_appointment_id) + '/painting/' + str(qpaint.id));
       else:
-         print('NOT VALID')
          ## send them back to the form:
          ##   >> REFACTOR >>  WHY DO I HAVE TO REPLICATE THIS IN THE 'GET' AND POST?
          form = PaintingForm(request.POST)
@@ -365,21 +359,20 @@ class PaintingNew(TemplateView):
 
 ###
 
-'''
 class PaintingWrite(TemplateView):
    def get(self, request, art_appointment_id, art_painting_id):
-      qspainting = art_painting.objects.filter(pk=art_painting_id)
-      if len(qspainting) == 1:
-         qrow = qspainting[0]
-         thisdata = {
-            'art_clientid': qrow.art_clientid.pk,
-            'art_paintingtime': qrow.art_paintingtime
-         }
-         print(thisdata)
-         thisform = PaintingForm(thisdata)
+      qpaint = art_painting.objects.filter(pk=art_painting_id)
+      if len(qpaint) == 1:
+         qrow = qpaint[0]
+         thisform = PaintingForm(
+            initial={
+               'art_paintingXpaintcolor': art_paintingXpaintcolor.objects.filter(art_paintingid=art_painting_id).values_list('paintcolorid',flat=True)
+            }
+         )
          thiscontext = {
             'qonepainting': qrow,
             'pkid': art_painting_id,
+            'art_appointmentid': art_appointment_id,
             'form': thisform
          }
          return render(request, 'trackart/paintingwrite.html', context=thiscontext)
@@ -389,27 +382,23 @@ class PaintingWrite(TemplateView):
    def post(self, request, art_appointment_id, art_painting_id):
       thisform = PaintingForm(request.POST)
       if thisform.is_valid():
+         '''
          ## process;
          art_painting.objects.filter(id=art_painting_id).update(
             art_clientid = thisform.cleaned_data.get("art_clientid"),
             art_paintingtime = thisform.cleaned_data.get("art_paintingtime")
          )
          ##qc.save()
-         return HttpResponseRedirect('/painting/' + str(art_painting_id));
+         '''
+         return HttpResponseRedirect('/appointment/' + str(art_appointment_id) + '/painting/' + str(art_painting_id));
       else:
          ##   >> REFACTOR >>  WHY DO I HAVE TO REPLICATE THIS IN THE 'GET' AND POST?
-         thisdata = {
-            'art_clientid': thisform.cleaned_data.get("art_clientid"),
-            'art_paintingtime': thisform.cleaned_data.get("art_paintingtime")
+         form = PaintingForm(request.POST)
+         context = {
+            'form': thisform,
+            'art_appointmentid': art_appointment_id
          }
-         thisform = PaintingForm(thisdata)
-         thiscontext = {
-            'pkid': art_painting_id,
-            'form': thisform
-         }
-         return render(request, 'trackart/paintingwrite.html', context=thiscontext)
-
-'''
+         return render(request, 'trackart/paintingwrite.html', context=context)
 
 
 ##
