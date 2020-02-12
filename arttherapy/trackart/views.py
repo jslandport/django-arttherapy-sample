@@ -10,9 +10,8 @@ from .forms import PaintingForm
 from .models import art_client
 from .models import art_appointment
 from .models import art_painting
-from .models import art_paintingXpaintcolor
-from .models import art_paintingXclientmood
 from .models import paintcolor
+from .models import clientmood
 
 
 #############################
@@ -298,12 +297,8 @@ class PaintingView(TemplateView):
       qspainting = art_painting.objects.filter(pk=art_painting_id)
       if len(qspainting) == 1:
          qrow = qspainting[0]
-         qsxpaintcolor = art_paintingXpaintcolor.objects.filter(art_paintingid = art_painting_id)
-         qsxclientmood = art_paintingXclientmood.objects.filter(art_paintingid = art_painting_id)
          context = {
-            'qonepainting': qrow,
-            'qsxpaintcolor': qsxpaintcolor,
-            'qsxclientmood': qsxclientmood,
+            'qpainting': qrow,
             'pkid': art_painting_id
          }
       else:
@@ -329,21 +324,16 @@ class PaintingNew(TemplateView):
    def post(self, request, art_appointment_id):
       thisform = PaintingForm(request.POST)
       if thisform.is_valid():
-         #print(thisform.cleaned_data.get('art_paintingXpaintcolor'))
+         #print(thisform.cleaned_data.get('paintcolors'))
          ## process:
          ## 1) write the painting:
          qpaint = art_painting.objects.create(
             art_appointmentid = art_appointment.objects.get(pk = art_appointment_id)
          )
          qpaint.save()
-         ## 2) connect the Colors to the Painting:
-         thisform.cleaned_data.get('art_paintingXpaintcolor')
-         for thispaintcolor in thisform.cleaned_data.get('art_paintingXpaintcolor'):
-            qxcolor = art_paintingXpaintcolor.objects.create(
-               art_paintingid = qpaint,
-               paintcolorid = paintcolor.objects.get(paintcolortitle = thispaintcolor)
-            )
-            qxcolor.save()
+         qpaint.paintcolors.set( thisform.cleaned_data.get('paintcolors') )
+         qpaint.clientmoods.set( thisform.cleaned_data.get('clientmoods') )
+
          ## go to Painting:
          return HttpResponseRedirect('/appointment/' + str(art_appointment_id) + '/painting/' + str(qpaint.id));
       else:
@@ -366,7 +356,8 @@ class PaintingWrite(TemplateView):
          qrow = qpaint[0]
          thisform = PaintingForm(
             initial={
-               'art_paintingXpaintcolor': art_paintingXpaintcolor.objects.filter(art_paintingid=art_painting_id).values_list('paintcolorid',flat=True)
+               'paintcolors': qrow.paintcolors.all(),
+               'clientmoods': qrow.clientmoods.all()
             }
          )
          thiscontext = {
@@ -382,14 +373,13 @@ class PaintingWrite(TemplateView):
    def post(self, request, art_appointment_id, art_painting_id):
       thisform = PaintingForm(request.POST)
       if thisform.is_valid():
-         '''
-         ## process;
-         art_painting.objects.filter(id=art_painting_id).update(
-            art_clientid = thisform.cleaned_data.get("art_clientid"),
-            art_paintingtime = thisform.cleaned_data.get("art_paintingtime")
-         )
-         ##qc.save()
-         '''
+         ## process:
+            ## 1:  (do we need an Update of the core table?  Currently not)
+            ## art_painting.objects.filter(id=art_painting_id).update( id = art_painting_id )
+         ## 2:  update the Set:
+         art_painting.objects.filter(id=art_painting_id)[0].paintcolors.set( thisform.cleaned_data.get('paintcolors') )
+         art_painting.objects.filter(id=art_painting_id)[0].clientmoods.set( thisform.cleaned_data.get('clientmoods') )
+         ## redirect
          return HttpResponseRedirect('/appointment/' + str(art_appointment_id) + '/painting/' + str(art_painting_id));
       else:
          ##   >> REFACTOR >>  WHY DO I HAVE TO REPLICATE THIS IN THE 'GET' AND POST?
