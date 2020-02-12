@@ -27,13 +27,6 @@ class art_appointment(models.Model):
    ## 'summary' of a row, for various admin / display purposes baked into django
    def __str__(self):
       return str(self.art_clientid)+' at '+str(self.art_appointmenttime)
-   
-class art_painting(models.Model):
-   art_appointmentid = models.ForeignKey(art_appointment, on_delete=models.CASCADE)
-   createDate = models.DateTimeField( auto_now_add=True )
-   ## 'summary' of a row, for various admin / display purposes baked into django
-   def __str__(self):
-      return 'appointment=' + str(self.art_appointmentid)+'; paintingId ' + str(self.id)
 
 
 ## LOOKUP TABLES:
@@ -52,19 +45,15 @@ class clientmood(models.Model):
    def __str__(self):
       return self.clientmoodtitle
 
-## MANY X MANY CONNECTORS:
 
-class art_paintingXpaintcolor(models.Model):
-   art_paintingid = models.ForeignKey(art_painting, on_delete=models.CASCADE)
-   paintcolorid = models.ForeignKey(paintcolor, on_delete=models.CASCADE)
+
+## 'connector' table
+   
+class art_painting(models.Model):
+   art_appointmentid = models.ForeignKey(art_appointment, on_delete=models.CASCADE)
    createDate = models.DateTimeField( auto_now_add=True )
+   paintcolors = models.ManyToManyField(paintcolor)
+   clientmoods = models.ManyToManyField(clientmood)
+   ## 'summary' of a row, for various admin / display purposes baked into django
    def __str__(self):
-      return str(self.art_paintingid)+' --> '+str(self.paintcolorid)
-
-class art_paintingXclientmood(models.Model):
-   art_paintingid = models.ForeignKey(art_painting, on_delete=models.CASCADE)
-   clientmoodid = models.ForeignKey(clientmood, on_delete=models.CASCADE)
-   createDate = models.DateTimeField( auto_now_add=True )
-   def __str__(self):
-      return str(self.art_paintingid)+' --> '+str(self.clientmoodid)
-
+      return 'appointment=' + str(self.art_appointmentid)+'; paintingId ' + str(self.id)
