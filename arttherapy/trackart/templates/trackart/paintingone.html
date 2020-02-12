@@ -1,9 +1,7 @@
 {% comment %}
 EXPECTED INCOMING PARAMETERS:
-   qonepainting  -query of client data
+   qpainting  -query of client data
    pkid     -painting's PKid
-   qsxpaintcolor   \_ 1xmany connections with this painting
-   qsxclientmood   /
 {% endcomment %}<!DOCTYPE html>
 <html>
    <head>
@@ -15,37 +13,37 @@ EXPECTED INCOMING PARAMETERS:
       {% include "trackart/part_bodytemplate.html" %}
       <h1>TrackArt Painting {{ pkid }}:</h1>
       <div class="series">
-         <div><a href="/appointment/{{ qonepainting.art_appointmentid.pk }}/paintingwrite/{{ pkid }}">Edit Painting</a></div>
-         <div><a href="/appointment/{{ qonepainting.art_appointmentid.pk }}/paintingdelete/{{ pkid }}" onclick="return confirm('This will DELETE this painting\n\nOK to DELETE, Cancel to stop')">Delete Painting</a></div>
-         <div><a href="/appointment/{{ qonepainting.art_appointmentid.pk }}">Back to Appointment</a></div>
+         <div><a href="/appointment/{{ qpainting.art_appointmentid.pk }}/paintingwrite/{{ pkid }}">Edit Painting</a></div>
+         <div><a href="/appointment/{{ qpainting.art_appointmentid.pk }}/paintingdelete/{{ pkid }}" onclick="return confirm('This will DELETE this painting\n\nOK to DELETE, Cancel to stop')">Delete Painting</a></div>
+         <div><a href="/appointment/{{ qpainting.art_appointmentid.pk }}">Back to Appointment</a></div>
          <div><a href="/">Back to Index</a></div>
       </div>
       <div class="postseries"></div>
 
-   {% if qonepainting %}
+   {% if qpainting %}
 
-      <h3>{{ qonepainting }}</h3>
+      <h3>{{ qpainting }}</h3>
 
-      {% if qsxpaintcolor %}
-         <h4>Color(s) used in painting:</h4>
+      <h4>Color(s) used in painting:</h4>
+      {% if qpainting.paintcolors.all %}
          <ol>
-            {% for qa in qsxpaintcolor %}
-              <li>{{ qa.paintcolorid }}</li>
+            {% for qa in qpainting.paintcolors.all %}
+              <li>{{ qa }}</li>
             {% endfor %}
          </ol>
       {% else %}
-         <h4 class="none">No Colors listed</h4>
+         <div class="none">None</div>
       {% endif %}
-      
-      {% if qsxclientmood %}
-         <h4>Mood(s) during painting:</h4>
+               
+      <h4>Mood(s) during painting:</h4>
+      {% if qpainting.clientmoods.all %}
          <ol>
-            {% for qa in qsxclientmood %}
-              <li>{{ qa.clientmoodid }}</li>
-            {% endfor %}
+         {% for qa in qpainting.clientmoods.all %}
+           <li>{{ qa }}</li>
+         {% endfor %}
          </ol>
       {% else %}
-         <h4 class="none">No Moods listed</h4>
+         <div class="none">None</div>
       {% endif %}
       
 
