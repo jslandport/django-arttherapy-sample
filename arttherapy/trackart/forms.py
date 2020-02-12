@@ -1,6 +1,7 @@
 from django import forms
 from .models import art_client
 from .models import paintcolor
+from .models import clientmood
 
 
 ### mytuple = [('BF', 'before'), ('DU','during'), ('AF','after')]
@@ -35,10 +36,14 @@ class AppointmentForm(forms.Form):
    
 class PaintingForm(forms.Form):
    ## (users should NOT be choosing Appointment when doing a painting, they must already be IN an appointment, which will be handled upstream)
-   qcolor = paintcolor.objects.all()
-   art_paintingXpaintcolor = forms.ModelMultipleChoiceField(
-      queryset=qcolor,
+   paintcolors = forms.ModelMultipleChoiceField(
+      queryset=paintcolor.objects.all(),
       label='Colors Used',
+      widget=forms.CheckboxSelectMultiple
+   )
+   clientmoods = forms.ModelMultipleChoiceField(
+      queryset=clientmood.objects.all(),
+      label='Client Moods',
       widget=forms.CheckboxSelectMultiple
    )
    
