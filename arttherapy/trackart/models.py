@@ -2,6 +2,10 @@ from django.db import models
 
 # Create your models here.
 
+myjustdate = "%m/%d/%Y"
+myfulltime = myjustdate+" %I:%M:%S %p"
+
+
 '''
 schema:
 
@@ -19,14 +23,14 @@ class art_client(models.Model):
    lastupdated = models.DateTimeField( auto_now=True )
    ## 'summary' of a row, for various admin / display purposes baked into django
    def __str__(self):
-      return self.art_clientlastname +', '+ self.art_clientfirstname
+      return self.art_clientfirstname +' '+ self.art_clientlastname
    
 class art_appointment(models.Model):
    art_clientid = models.ForeignKey(art_client, on_delete=models.CASCADE)
    art_appointmenttime = models.DateTimeField( blank=False, null=False )
    ## 'summary' of a row, for various admin / display purposes baked into django
    def __str__(self):
-      return str(self.art_clientid)+' at '+str(self.art_appointmenttime)
+      return self.art_clientid.__str__() + ' at '+self.art_appointmenttime.strftime(myfulltime)
 
 
 ## LOOKUP TABLES:
@@ -47,13 +51,15 @@ class clientmood(models.Model):
 
 
 
-## 'connector' table
+## table x lookup
    
 class art_painting(models.Model):
    art_appointmentid = models.ForeignKey(art_appointment, on_delete=models.CASCADE)
+   art_paintingtitle = models.CharField(max_length=200, default='(Untitled)')
    createDate = models.DateTimeField( auto_now_add=True )
+   lastupdated = models.DateTimeField( auto_now=True )
    paintcolors = models.ManyToManyField(paintcolor)
    clientmoods = models.ManyToManyField(clientmood)
    ## 'summary' of a row, for various admin / display purposes baked into django
    def __str__(self):
-      return 'appointment=' + str(self.art_appointmentid)+'; paintingId ' + str(self.id)
+      return self.art_paintingtitle + ', created ' + self.createDate.strftime(myfulltime)
