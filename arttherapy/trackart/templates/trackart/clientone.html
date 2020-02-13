@@ -22,8 +22,7 @@ EXPECTED INCOMING PARAMETERS:
 
       {% if qoneclient %}
       
-         <h3>{{ qoneclient.art_clientfirstname }}
-            {{ qoneclient.art_clientlastname }}
+         <h3>{{ qoneclient }}
          </h3>
          <div>DOB: {{ qoneclient.art_clientdob }}</div>
       
@@ -32,7 +31,7 @@ EXPECTED INCOMING PARAMETERS:
             <div><a href="/appointmentnew?art_clientid={{ pkid }}">Add an Appointment</div>
             <ol>
                {% for qa in qsappointment %}
-                 <li><a href="/appointment/{{ qa.id }}">{{ qa.art_appointmenttime }}</a></li>
+                 <li><a href="/appointment/{{ qa.id }}">{{ qa }}</a></li>
                {% endfor %}
             </ol>
          {% else %}
