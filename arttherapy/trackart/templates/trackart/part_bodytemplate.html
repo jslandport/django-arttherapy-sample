@@ -1,1 +1,13 @@
-<div class="generalnav"><a href="/">TrackArt Homepage</a></div>
+{% comment %}
+OPTIONAL INCOMING PARAMETERS:
+   dnavlinks   -an array of links
+{% endcomment %}<!DOCTYPE html>
+<div class="generalnav">
+   <div class="generalnavbits">
+      {% if dnavlinks %}
+         {% for thelink,thedesc in dnavlinks.items %}
+            <div><a href="{{ thelink }}">{{ thedesc }}</a></div>
+         {% endfor %}
+      {% endif %}<div><a href="/">TrackArt Homepage</a></div>
+   </div>
+</div>
