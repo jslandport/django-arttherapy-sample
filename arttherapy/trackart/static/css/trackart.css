@@ -1,7 +1,18 @@
-h1, h2, h3, h4 { color:#900 }
+body { margin:0px; padding:4px }
 
-.generalnav { text-align:right; border-bottom:1px solid #999; margin-bottom:4px; font-style:italic }
+h1, h2, h3, h4 { color:#955 }
+
+A, A:link, A:visited, A:active, A:hover { color:#b73 }
+
+.generalnav { margin:-4px; padding:4px; text-align:right; border-bottom:1px solid #999; margin-bottom:4px; font-style:italic; background-color:#900; border-bottom:3px ridge #999 }
+.generalnav A, .generalnav A:link, .generalnav A:visited, .generalnav A:active, .generalnav A:hover { color:#fca }
+.generalnavbits div { margin-left:15px; position:relative; display:inline }
 
 .none { font-style:italic; color:#888 }
 
 .error { font-weight:bold; color:#f00 }
+
+.series { display:inline }
+.series div { float:left; margin-right:20px; font-weight:bold }
+
+.postseries { clear:both; height:5px }
