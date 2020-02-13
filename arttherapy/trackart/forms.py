@@ -36,6 +36,7 @@ class AppointmentForm(forms.Form):
    
 class PaintingForm(forms.Form):
    ## (users should NOT be choosing Appointment when doing a painting, they must already be IN an appointment, which will be handled upstream)
+   art_paintingtitle = forms.CharField(label='Painting Title', max_length=200)
    paintcolors = forms.ModelMultipleChoiceField(
       queryset=paintcolor.objects.all(),
       label='Colors Used',
