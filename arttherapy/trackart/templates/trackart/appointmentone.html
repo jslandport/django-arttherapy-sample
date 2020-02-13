@@ -25,16 +25,14 @@ EXPECTED INCOMING PARAMETERS:
    
          <h3>
             Appointment for
-            {{ qoneappointment.art_clientid.art_clientfirstname }}
-            {{ qoneappointment.art_clientid.art_clientlastname }},
-            at {{ qoneappointment.art_appointmenttime }}
+            {{ qoneappointment }}
          </h3>
          {% if qspainting %}
             <h4>Paintings</h4>
             <div><a href="/appointment/{{ pkid }}/paintingnew">Add a Painting</a></div>
             <ol>
                {% for qp in qspainting %}
-                 <li><a href="/appointment/{{ pkid }}/painting/{{ qp.id }}">Created at {{ qp.createDate }}</a></li>
+                 <li><a href="/appointment/{{ pkid }}/painting/{{ qp.id }}">{{ qp }}</a></li>
                {% endfor %}
             </ol>
          {% else %}
