@@ -13,6 +13,8 @@ from .models import art_painting
 from .models import paintcolor
 from .models import clientmood
 
+from .navhelper import getnavdictfromparamsdict
+
 
 #############################
 ##
@@ -70,13 +72,19 @@ class PaintingCentricListView(TemplateView):
 class ClientView(TemplateView):
    def get(self, request, art_client_id):
       qsclient = art_client.objects.filter(pk=art_client_id)
+      dnavlinks = getnavdictfromparamsdict(
+         dparams = { 'art_clientid': art_client_id },
+         cururl = request.path_info
+      )
+      ##{ '/viewclients': 'Client-Centric View' }
       if len(qsclient) == 1:
          qrow = qsclient[0]
          qsapt = art_appointment.objects.filter(art_clientid = art_client_id)
          context = {
             'qoneclient': qrow,
             'qsappointment': qsapt,
-            'pkid': art_client_id
+            'pkid': art_client_id,
+            'dnavlinks': dnavlinks
          }
          return render(request, 'trackart/clientone.html', context=context)
 
@@ -96,13 +104,22 @@ class ClientNotFound(TemplateView):
 class ClientNew(TemplateView):
    def get(self, request):
       form = ClientForm()
+      dnavlinks = getnavdictfromparamsdict(
+         dparams = { 'art_clientid': 0 },
+         cururl = request.path_info
+      )
       context = {
-         'form': form
+         'form': form,
+         'dnavlinks': dnavlinks
       }
       return render(request, 'trackart/clientwrite.html', context=context)
 
    def post(self, request):
       thisform = ClientForm(request.POST)
+      dnavlinks = getnavdictfromparamsdict(
+         dparams = { 'art_clientid': 0 },
+         cururl = request.path_info
+      )
       if thisform.is_valid():
          ## process:
          qc = art_client.objects.create(
@@ -118,7 +135,8 @@ class ClientNew(TemplateView):
          ##   >> REFACTOR >>  WHY DO I HAVE TO REPLICATE THIS IN THE 'GET' AND POST?
          form = ClientForm(request.POST)
          context = {
-            'form': thisform
+            'form': thisform,
+            'dnavlinks': dnavlinks
          }
          return render(request, 'trackart/clientwrite.html', context=context)
 
@@ -137,10 +155,15 @@ class ClientWrite(TemplateView):
             'art_clientdob': qrow.art_clientdob
          }
          thisform = ClientForm(thisdata)
+         dnavlinks = getnavdictfromparamsdict(
+            dparams = { 'art_clientid': art_client_id },
+            cururl = request.path_info
+         )
          thiscontext = {
             'qoneclient': qrow,
             'pkid': art_client_id,
-            'form': thisform
+            'form': thisform,
+            'dnavlinks': dnavlinks
          }
          return render(request, 'trackart/clientwrite.html', context=thiscontext)
       else:
@@ -165,9 +188,14 @@ class ClientWrite(TemplateView):
             'art_clientdob': thisform.cleaned_data.get("art_clientdob")
          }
          thisform = ClientForm(thisdata)
+         dnavlinks = getnavdictfromparamsdict(
+            dparams = { 'art_clientid': art_client_id },
+            cururl = request.path_info
+         )
          thiscontext = {
             'pkid': art_client_id,
-            'form': thisform
+            'form': thisform,
+            'dnavlinks': dnavlinks
          }
          return render(request, 'trackart/clientwrite.html', context=thiscontext)
          
@@ -194,10 +222,16 @@ class AppointmentView(TemplateView):
       if len(qsappointment) == 1:
          qrow = qsappointment[0]
          qspainting = art_painting.objects.filter(art_appointmentid = art_appointment_id).order_by('createDate')
+         print(my_url_path)
+         dnavlinks = getnavdictfromparamsdict(
+            { 'art_appointmentid': art_appointment_id },
+            my_url_path
+         )
          context = {
             'qoneappointment': qrow,
             'qspainting': qspainting,
-            'pkid': art_appointment_id
+            'pkid': art_appointment_id,
+            'dnavlinks': dnavlinks
          }
       else:
          context = {}
