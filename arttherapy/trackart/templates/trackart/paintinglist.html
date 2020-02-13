@@ -1,0 +1,30 @@
+{% comment %}
+EXPECTED INCOMING PARAMETERS:
+   qpainting  -query of painting data
+{% endcomment %}<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <title>TrackArt:  Painting-Centric View</title>
+      {% include "trackart/part_headtemplate.html" %}
+   </head>
+   <body>
+      {% include "trackart/part_bodytemplate.html" %}
+      <h1>TrackArt Painting-Centric View</h1>
+      <div class="series">
+         <div><a href="/">Back to Index</a></div>
+      </div>
+      <div class="postseries"></div>
+
+{% if qpainting %}
+   <ul>
+   {% for qrow in qpainting %}
+     <li><a href="/appointment/{{ qrow.art_appointmentid.id }}/painting/{{ qrow.id }}">{{ qrow }} by {{ qrow.art_appointmentid.art_clientid }} at appointment {{ qrow.art_appointmentid.art_appointmenttime }}</a></li>
+   {% endfor %}
+   </ul>
+{% else %}
+   <p><em>No Paintings returned</em></p>
+{% endif %}
+
+    </body>
+</html>
