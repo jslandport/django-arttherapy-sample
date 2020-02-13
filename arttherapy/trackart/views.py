@@ -24,18 +24,18 @@ from .models import clientmood
 # Create your views here.
 class HomePageView(TemplateView):
    def get(self, request, **kwargs):
-      '''
-      qcolor = paintcolor.objects.all().order_by('paintcolortitle')
-      '''
       dfeatures = {
          './viewclients': 'Client-centric View',
          './viewappointments':  'Appointment-centric View',
+         './viewpaintings':  'Painting-centric View',
       }
       context = {
          'dfeatures': dfeatures
       }
       return render(request, 'trackart/index.html', context=context)
 
+
+#####    X-CENTRIC VIEWS
  
 class ClientCentricListView(TemplateView):
    def get(self, request, **kwargs):
@@ -48,7 +48,7 @@ class ClientCentricListView(TemplateView):
 
 class AppointmentCentricListView(TemplateView):
    def get(self, request, **kwargs):
-      qsappointment = art_appointment.objects.all().order_by('art_appointmenttime')
+      qsappointment = art_appointment.objects.all().order_by('-art_appointmenttime')
       context = {
          'qsappointment': qsappointment
       }
@@ -56,6 +56,16 @@ class AppointmentCentricListView(TemplateView):
       return render(request, 'trackart/appointmentlist.html', context=context)
 
 
+class PaintingCentricListView(TemplateView):
+   def get(self, request, **kwargs):
+      qpainting = art_painting.objects.all().order_by('-createDate')
+      context = {
+         'qpainting': qpainting
+      }
+      return render(request, 'trackart/paintinglist.html', context=context)
+
+
+######   CLIENT
 
 class ClientView(TemplateView):
    def get(self, request, art_client_id):
@@ -175,17 +185,15 @@ class ClientDelete(TemplateView):
 
 
 
-#############################
-##
-##    APPOINTMENTS - WRITE
-##
+######   APPOINTMENTS
+
 
 class AppointmentView(TemplateView):
    def get(self, request, art_appointment_id):
       qsappointment = art_appointment.objects.filter(pk=art_appointment_id)
       if len(qsappointment) == 1:
          qrow = qsappointment[0]
-         qspainting = art_painting.objects.filter(art_appointmentid = art_appointment_id)
+         qspainting = art_painting.objects.filter(art_appointmentid = art_appointment_id).order_by('createDate')
          context = {
             'qoneappointment': qrow,
             'qspainting': qspainting,
@@ -195,6 +203,11 @@ class AppointmentView(TemplateView):
          context = {}
       return render(request, 'trackart/appointmentone.html', context=context)
 
+
+#############################
+##
+##    APPOINTMENTS - WRITE
+##
 
 class AppointmentNew(TemplateView):
    def get(self, request):
@@ -258,7 +271,6 @@ class AppointmentWrite(TemplateView):
             art_clientid = thisform.cleaned_data.get("art_clientid"),
             art_appointmenttime = thisform.cleaned_data.get("art_appointmenttime")
          )
-         ##qc.save()
          return HttpResponseRedirect('/appointment/' + str(art_appointment_id));
       else:
          ##   >> REFACTOR >>  WHY DO I HAVE TO REPLICATE THIS IN THE 'GET' AND POST?
@@ -290,7 +302,7 @@ class AppointmentDelete(TemplateView):
 
 
 
-#####
+######   PAINTINGS
 
 class PaintingView(TemplateView):
    def get(self, request, art_appointment_id, art_painting_id):
@@ -324,11 +336,11 @@ class PaintingNew(TemplateView):
    def post(self, request, art_appointment_id):
       thisform = PaintingForm(request.POST)
       if thisform.is_valid():
-         #print(thisform.cleaned_data.get('paintcolors'))
          ## process:
          ## 1) write the painting:
          qpaint = art_painting.objects.create(
-            art_appointmentid = art_appointment.objects.get(pk = art_appointment_id)
+            art_appointmentid = art_appointment.objects.get(pk = art_appointment_id),
+            art_paintingtitle = thisform.cleaned_data.get('art_paintingtitle')
          )
          qpaint.save()
          qpaint.paintcolors.set( thisform.cleaned_data.get('paintcolors') )
@@ -356,6 +368,7 @@ class PaintingWrite(TemplateView):
          qrow = qpaint[0]
          thisform = PaintingForm(
             initial={
+               'art_paintingtitle': qrow.art_paintingtitle,
                'paintcolors': qrow.paintcolors.all(),
                'clientmoods': qrow.clientmoods.all()
             }
@@ -374,8 +387,11 @@ class PaintingWrite(TemplateView):
       thisform = PaintingForm(request.POST)
       if thisform.is_valid():
          ## process:
-            ## 1:  (do we need an Update of the core table?  Currently not)
-            ## art_painting.objects.filter(id=art_painting_id).update( id = art_painting_id )
+         ## 1:  (Update the core table)
+         art_painting.objects.filter(id=art_painting_id).update(
+            art_paintingtitle = thisform.cleaned_data.get("art_paintingtitle")
+         )
+         
          ## 2:  update the Set:
          art_painting.objects.filter(id=art_painting_id)[0].paintcolors.set( thisform.cleaned_data.get('paintcolors') )
          art_painting.objects.filter(id=art_painting_id)[0].clientmoods.set( thisform.cleaned_data.get('clientmoods') )
