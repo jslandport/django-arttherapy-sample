@@ -10,25 +10,25 @@ urlpatterns = [
 	path('viewpaintings', views.PaintingCentricListView.as_view()),
 	
 	## CLIENT
-	path('client/<int:art_client_id>', views.ClientView.as_view()),
+	path('client/<int:art_clientid>', views.ClientView.as_view()),
    path('clientnew', views.ClientNew.as_view()),
-	path('clientwrite/<int:art_client_id>', views.ClientWrite.as_view()),
-	path('clientdelete/<int:art_client_id>', views.ClientDelete.as_view()),
+	path('clientwrite/<int:art_clientid>', views.ClientWrite.as_view()),
+	path('clientdelete/<int:art_clientid>', views.ClientDelete.as_view()),
 	path('clientnotfound', views.ClientNotFound.as_view()),
 	
 	## APPOINTMENT
-	path('appointment/<int:art_appointment_id>', views.AppointmentView.as_view()),
+	path('appointment/<int:art_appointmentid>', views.AppointmentView.as_view()),
 	path('appointmentnew', views.AppointmentNew.as_view()),
-   path('appointmentwrite/<int:art_appointment_id>', views.AppointmentWrite.as_view()),
-	path('appointmentdelete/<int:art_appointment_id>', views.AppointmentDelete.as_view()),
+   path('appointmentwrite/<int:art_appointmentid>', views.AppointmentWrite.as_view()),
+	path('appointmentdelete/<int:art_appointmentid>', views.AppointmentDelete.as_view()),
 	
 	## PAINTING
-	path('appointment/<int:art_appointment_id>/painting/<int:art_painting_id>', views.PaintingView.as_view()),
-	path('appointment/<int:art_appointment_id>/paintingnew', views.PaintingNew.as_view()),
-	path('appointment/<int:art_appointment_id>/paintingwrite/<int:art_painting_id>', views.PaintingWrite.as_view()),
-	path('appointment/<int:art_appointment_id>/paintingdelete/<int:art_painting_id>', views.PaintingDelete.as_view())
+	path('appointment/<int:art_appointmentid>/painting/<int:art_paintingid>', views.PaintingView.as_view()),
+	path('appointment/<int:art_appointmentid>/paintingnew', views.PaintingNew.as_view()),
+	path('appointment/<int:art_appointmentid>/paintingwrite/<int:art_paintingid>', views.PaintingWrite.as_view()),
+	path('appointment/<int:art_appointmentid>/paintingdelete/<int:art_paintingid>', views.PaintingDelete.as_view())
 	
 	## add/edit records(?)
 ]
 
-###path('client/<int:art_client_id>', views.ClientView.as_view()),
+###path('client/<int:art_clientid>', views.ClientView.as_view()),
