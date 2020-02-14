@@ -2,11 +2,13 @@ body { margin:0px; padding:4px }
 
 h1, h2, h3, h4 { color:#955 }
 
+h1 { margin:0px; padding-top:0px }
+
 A, A:link, A:visited, A:active, A:hover { color:#b73 }
 
-.generalnav { margin:-4px; padding:4px; text-align:right; border-bottom:1px solid #999; margin-bottom:4px; font-style:italic; background-color:#900; border-bottom:3px ridge #999 }
+.generalnav { margin:12px -4px 12px -4px; padding:4px; background-color:#900 }
 .generalnav A, .generalnav A:link, .generalnav A:visited, .generalnav A:active, .generalnav A:hover { color:#fca }
-.generalnavbits div { margin-left:15px; position:relative; display:inline }
+.generalnavbits div { margin-right:15px; position:relative; display:inline }
 
 .none { font-style:italic; color:#888 }
 
