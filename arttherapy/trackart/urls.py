@@ -8,6 +8,9 @@ urlpatterns = [
 	path('viewclients', views.ClientCentricListView.as_view()),
 	path('viewappointments', views.AppointmentCentricListView.as_view()),
 	path('viewpaintings', views.PaintingCentricListView.as_view()),
+
+   ## ('error' handling)
+   path('notfound/<whatnotfound>/<int:idnotfound>', views.NotFound.as_view()),
 	
 	## CLIENT
 	path('client/<int:art_clientid>', views.ClientView.as_view()),
