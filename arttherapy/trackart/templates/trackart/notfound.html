@@ -1,0 +1,19 @@
+{% comment %}
+EXPECTED INCOMING PARAMETERS:
+   whatnotfound   -text describing the kind of thing not found
+   idnotfound     -the id # that wasn't found
+{% endcomment %}<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <title>TrackArt:  {{ whatnotfound }} Not Found</title>
+      {% include "trackart/part_headtemplate.html" %}
+   </head>
+   <body>
+      <h1>TrackArt {{ whatnotfound }} Not Found</h1>
+      {% include "trackart/part_bodytemplate.html" %}
+      
+      <p class="none">{{ whatnotfound }} {{ idnotfound }} wasn't found.</p>
+      
+    </body>
+</html>
