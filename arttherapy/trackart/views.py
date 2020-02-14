@@ -67,6 +67,21 @@ class PaintingCentricListView(TemplateView):
       return render(request, 'trackart/paintinglist.html', context=context)
 
 
+class NotFound(TemplateView):
+   def get(self, request, whatnotfound, idnotfound):
+      dnavlinks = getnavdictfromparamsdict(
+         dparams = { 'art_' + whatnotfound + 'id': 0 },
+         cururl = request.path_info
+      )
+      context = {
+         'whatnotfound': whatnotfound,
+         'idnotfound': idnotfound,
+         'dnavlinks': dnavlinks
+      }
+      return render(request, 'trackart/notfound.html', context=context)
+      
+
+
 ######   CLIENT
 
 class ClientView(TemplateView):
@@ -87,6 +102,8 @@ class ClientView(TemplateView):
             'dnavlinks': dnavlinks
          }
          return render(request, 'trackart/clientone.html', context=context)
+      else:
+         return HttpResponseRedirect('/notfound/client/' + str(art_clientid));
 
 
 class ClientNotFound(TemplateView):
@@ -167,7 +184,7 @@ class ClientWrite(TemplateView):
          }
          return render(request, 'trackart/clientwrite.html', context=thiscontext)
       else:
-         return HttpResponseRedirect('/clientnotfound')
+         return HttpResponseRedirect('/notfound/client/' + str(art_clientid));
       
    def post(self, request, art_clientid):
       thisform = ClientForm(request.POST)
@@ -234,9 +251,9 @@ class AppointmentView(TemplateView):
             'pkid': art_appointmentid,
             'dnavlinks': dnavlinks
          }
+         return render(request, 'trackart/appointmentone.html', context=context)
       else:
-         context = {}
-      return render(request, 'trackart/appointmentone.html', context=context)
+         return HttpResponseRedirect('/notfound/appointment/' + str(art_appointmentid));
 
 
 #############################
@@ -313,8 +330,9 @@ class AppointmentWrite(TemplateView):
          }
          return render(request, 'trackart/appointmentwrite.html', context=thiscontext)
       else:
-         return HttpResponseRedirect('/appointmentnotfound')
-      
+         return HttpResponseRedirect('/notfound/appointment/' + str(art_appointmentid));
+         
+               
    def post(self, request, art_appointmentid):
       thisform = AppointmentForm(request.POST)
       if thisform.is_valid():
@@ -363,7 +381,7 @@ class AppointmentDelete(TemplateView):
 
 class PaintingView(TemplateView):
    def get(self, request, art_appointmentid, art_paintingid):
-      qspainting = art_painting.objects.filter(pk=art_paintingid)
+      qspainting = art_painting.objects.filter(pk=art_paintingid, art_appointmentid=art_appointmentid)
       if len(qspainting) == 1:
          qrow = qspainting[0]
          dnavlinks = getnavdictfromparamsdict(
@@ -378,10 +396,9 @@ class PaintingView(TemplateView):
             'pkid': art_paintingid,
             'dnavlinks': dnavlinks
          }
+         return render(request, 'trackart/paintingone.html', context=context)
       else:
-         context = {}
-      return render(request, 'trackart/paintingone.html', context=context)
-
+         return HttpResponseRedirect('/notfound/painting/' + str(art_paintingid));
 
 #############################
 ##
@@ -443,7 +460,7 @@ class PaintingNew(TemplateView):
 
 class PaintingWrite(TemplateView):
    def get(self, request, art_appointmentid, art_paintingid):
-      qpaint = art_painting.objects.filter(pk=art_paintingid)
+      qpaint = art_painting.objects.filter(pk=art_paintingid, art_appointmentid=art_appointmentid)
       if len(qpaint) == 1:
          qrow = qpaint[0]
          thisform = PaintingForm(
@@ -469,7 +486,7 @@ class PaintingWrite(TemplateView):
          }
          return render(request, 'trackart/paintingwrite.html', context=thiscontext)
       else:
-         return HttpResponseRedirect('/paintingnotfound')
+         return HttpResponseRedirect('/notfound/painting/' + str(art_paintingid));
       
    def post(self, request, art_appointmentid, art_paintingid):
       thisform = PaintingForm(request.POST)
