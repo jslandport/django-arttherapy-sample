@@ -390,8 +390,7 @@ class PaintingView(TemplateView):
 
 class PaintingNew(TemplateView):
    def get(self, request, art_appointmentid):
-      thisdata = {}
-      thisform = PaintingForm(thisdata)
+      thisform = PaintingForm()
       dnavlinks = getnavdictfromparamsdict(
          {  'art_paintingid': 0,
             'art_appointmentid': art_appointmentid,
