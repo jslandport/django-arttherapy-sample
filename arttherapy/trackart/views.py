@@ -27,9 +27,9 @@ from .navhelper import getnavdictfromparamsdict
 class HomePageView(TemplateView):
    def get(self, request, **kwargs):
       dfeatures = {
-         './viewclients': 'Client-centric View',
-         './viewappointments':  'Appointment-centric View',
-         './viewpaintings':  'Painting-centric View',
+         './viewclients': 'All Clients',
+         './viewappointments':  'All Appointments',
+         './viewpaintings':  'All Paintings',
       }
       context = {
          'dfeatures': dfeatures
@@ -70,20 +70,20 @@ class PaintingCentricListView(TemplateView):
 ######   CLIENT
 
 class ClientView(TemplateView):
-   def get(self, request, art_client_id):
-      qsclient = art_client.objects.filter(pk=art_client_id)
+   def get(self, request, art_clientid):
+      qsclient = art_client.objects.filter(pk=art_clientid)
       dnavlinks = getnavdictfromparamsdict(
-         dparams = { 'art_clientid': art_client_id },
+         dparams = { 'art_clientid': art_clientid },
          cururl = request.path_info
       )
       ##{ '/viewclients': 'Client-Centric View' }
       if len(qsclient) == 1:
          qrow = qsclient[0]
-         qsapt = art_appointment.objects.filter(art_clientid = art_client_id)
+         qsapt = art_appointment.objects.filter(art_clientid = art_clientid)
          context = {
             'qoneclient': qrow,
             'qsappointment': qsapt,
-            'pkid': art_client_id,
+            'pkid': art_clientid,
             'dnavlinks': dnavlinks
          }
          return render(request, 'trackart/clientone.html', context=context)
@@ -145,8 +145,8 @@ class ClientNew(TemplateView):
 ###
 
 class ClientWrite(TemplateView):
-   def get(self, request, art_client_id):
-      qsclient = art_client.objects.filter(pk=art_client_id)
+   def get(self, request, art_clientid):
+      qsclient = art_client.objects.filter(pk=art_clientid)
       if len(qsclient) == 1:
          qrow = qsclient[0]
          thisdata = {
@@ -156,12 +156,12 @@ class ClientWrite(TemplateView):
          }
          thisform = ClientForm(thisdata)
          dnavlinks = getnavdictfromparamsdict(
-            dparams = { 'art_clientid': art_client_id },
+            dparams = { 'art_clientid': art_clientid },
             cururl = request.path_info
          )
          thiscontext = {
             'qoneclient': qrow,
-            'pkid': art_client_id,
+            'pkid': art_clientid,
             'form': thisform,
             'dnavlinks': dnavlinks
          }
@@ -169,17 +169,17 @@ class ClientWrite(TemplateView):
       else:
          return HttpResponseRedirect('/clientnotfound')
       
-   def post(self, request, art_client_id):
+   def post(self, request, art_clientid):
       thisform = ClientForm(request.POST)
       if thisform.is_valid():
          ## process;
-         art_client.objects.filter(id=art_client_id).update(
+         art_client.objects.filter(id=art_clientid).update(
             art_clientfirstname = thisform.cleaned_data.get("art_clientfirstname"),
             art_clientlastname = thisform.cleaned_data.get("art_clientlastname"),
             art_clientdob = thisform.cleaned_data.get("art_clientdob")
          )
          ##qc.save()
-         return HttpResponseRedirect('/client/' + str(art_client_id));
+         return HttpResponseRedirect('/client/' + str(art_clientid));
       else:
          ##   >> REFACTOR >>  WHY DO I HAVE TO REPLICATE THIS IN THE 'GET' AND POST?
          thisdata = {
@@ -189,11 +189,11 @@ class ClientWrite(TemplateView):
          }
          thisform = ClientForm(thisdata)
          dnavlinks = getnavdictfromparamsdict(
-            dparams = { 'art_clientid': art_client_id },
+            dparams = { 'art_clientid': art_clientid },
             cururl = request.path_info
          )
          thiscontext = {
-            'pkid': art_client_id,
+            'pkid': art_clientid,
             'form': thisform,
             'dnavlinks': dnavlinks
          }
@@ -202,8 +202,8 @@ class ClientWrite(TemplateView):
 
 ####
 class ClientDelete(TemplateView):
-   def get(self, request, art_client_id):
-      art_client.objects.filter(id=art_client_id).delete()
+   def get(self, request, art_clientid):
+      art_client.objects.filter(id=art_clientid).delete()
       return HttpResponseRedirect('/viewclients')
    
 
@@ -217,20 +217,21 @@ class ClientDelete(TemplateView):
 
 
 class AppointmentView(TemplateView):
-   def get(self, request, art_appointment_id):
-      qsappointment = art_appointment.objects.filter(pk=art_appointment_id)
+   def get(self, request, art_appointmentid):
+      qsappointment = art_appointment.objects.filter(pk=art_appointmentid)
       if len(qsappointment) == 1:
          qrow = qsappointment[0]
-         qspainting = art_painting.objects.filter(art_appointmentid = art_appointment_id).order_by('createDate')
-         print(my_url_path)
+         qspainting = art_painting.objects.filter(art_appointmentid = art_appointmentid).order_by('createDate')
          dnavlinks = getnavdictfromparamsdict(
-            { 'art_appointmentid': art_appointment_id },
-            my_url_path
+            {  'art_appointmentid': art_appointmentid,
+               'art_clientid': qrow.art_clientid.id
+            },
+            request.path_info
          )
          context = {
             'qoneappointment': qrow,
             'qspainting': qspainting,
-            'pkid': art_appointment_id,
+            'pkid': art_appointmentid,
             'dnavlinks': dnavlinks
          }
       else:
@@ -249,8 +250,13 @@ class AppointmentNew(TemplateView):
       if 'art_clientid' in request.GET.keys():
          thisdata['art_clientid'] = request.GET['art_clientid']
       thisform = AppointmentForm(thisdata)
+      dnavlinks = getnavdictfromparamsdict(
+         {  'art_appointmentid': 0  },
+         request.path_info
+      )
       context = {
-         'form': thisform
+         'form': thisform,
+         'dnavlinks': dnavlinks
       }
       return render(request, 'trackart/appointmentwrite.html', context=context)
 
@@ -270,8 +276,13 @@ class AppointmentNew(TemplateView):
          ## send them back to the form:
          ##   >> REFACTOR >>  WHY DO I HAVE TO REPLICATE THIS IN THE 'GET' AND POST?
          form = AppointmentForm(request.POST)
+         dnavlinks = getnavdictfromparamsdict(
+            {  'art_appointmentid': 0 },
+            request.path_info
+         )
          context = {
-            'form': thisform
+            'form': thisform,
+            'dnavlinks': dnavlinks
          }
          return render(request, 'trackart/appointmentwrite.html', context=context)
 
@@ -279,8 +290,8 @@ class AppointmentNew(TemplateView):
 ###
 
 class AppointmentWrite(TemplateView):
-   def get(self, request, art_appointment_id):
-      qsappointment = art_appointment.objects.filter(pk=art_appointment_id)
+   def get(self, request, art_appointmentid):
+      qsappointment = art_appointment.objects.filter(pk=art_appointmentid)
       if len(qsappointment) == 1:
          qrow = qsappointment[0]
          thisdata = {
@@ -288,24 +299,31 @@ class AppointmentWrite(TemplateView):
             'art_appointmenttime': qrow.art_appointmenttime
          }
          thisform = AppointmentForm(thisdata)
+         dnavlinks = getnavdictfromparamsdict(
+            {  'art_appointmentid': art_appointmentid,
+               'art_clientid': qrow.art_clientid.id
+            },
+            request.path_info
+         )
          thiscontext = {
             'qoneappointment': qrow,
-            'pkid': art_appointment_id,
-            'form': thisform
+            'pkid': art_appointmentid,
+            'form': thisform,
+            'dnavlinks': dnavlinks
          }
          return render(request, 'trackart/appointmentwrite.html', context=thiscontext)
       else:
          return HttpResponseRedirect('/appointmentnotfound')
       
-   def post(self, request, art_appointment_id):
+   def post(self, request, art_appointmentid):
       thisform = AppointmentForm(request.POST)
       if thisform.is_valid():
          ## process;
-         art_appointment.objects.filter(id=art_appointment_id).update(
+         art_appointment.objects.filter(id=art_appointmentid).update(
             art_clientid = thisform.cleaned_data.get("art_clientid"),
             art_appointmenttime = thisform.cleaned_data.get("art_appointmenttime")
          )
-         return HttpResponseRedirect('/appointment/' + str(art_appointment_id));
+         return HttpResponseRedirect('/appointment/' + str(art_appointmentid));
       else:
          ##   >> REFACTOR >>  WHY DO I HAVE TO REPLICATE THIS IN THE 'GET' AND POST?
          thisdata = {
@@ -313,9 +331,14 @@ class AppointmentWrite(TemplateView):
             'art_appointmenttime': thisform.cleaned_data.get("art_appointmenttime")
          }
          thisform = AppointmentForm(thisdata)
+         dnavlinks = getnavdictfromparamsdict(
+            {  'art_appointmentid': art_appointmentid },
+            request.path_info
+         )
          thiscontext = {
-            'pkid': art_appointment_id,
-            'form': thisform
+            'pkid': art_appointmentid,
+            'form': thisform,
+            'dnavlinks': dnavlinks
          }
          return render(request, 'trackart/appointmentwrite.html', context=thiscontext)
 
@@ -323,8 +346,8 @@ class AppointmentWrite(TemplateView):
 ##
 
 class AppointmentDelete(TemplateView):
-   def get(self, request, art_appointment_id):
-      art_appointment.objects.filter(id=art_appointment_id).delete()
+   def get(self, request, art_appointmentid):
+      art_appointment.objects.filter(id=art_appointmentid).delete()
       return HttpResponseRedirect('/viewappointments')
 
 
@@ -339,13 +362,21 @@ class AppointmentDelete(TemplateView):
 ######   PAINTINGS
 
 class PaintingView(TemplateView):
-   def get(self, request, art_appointment_id, art_painting_id):
-      qspainting = art_painting.objects.filter(pk=art_painting_id)
+   def get(self, request, art_appointmentid, art_paintingid):
+      qspainting = art_painting.objects.filter(pk=art_paintingid)
       if len(qspainting) == 1:
          qrow = qspainting[0]
+         dnavlinks = getnavdictfromparamsdict(
+            {  'art_paintingid': qrow.pk,
+               'art_appointmentid': qrow.art_appointmentid.id,
+               'art_clientid': qrow.art_appointmentid.art_clientid.id
+            },
+            request.path_info
+         )
          context = {
             'qpainting': qrow,
-            'pkid': art_painting_id
+            'pkid': art_paintingid,
+            'dnavlinks': dnavlinks
          }
       else:
          context = {}
@@ -358,22 +389,30 @@ class PaintingView(TemplateView):
 ##
 
 class PaintingNew(TemplateView):
-   def get(self, request, art_appointment_id):
+   def get(self, request, art_appointmentid):
       thisdata = {}
       thisform = PaintingForm(thisdata)
+      dnavlinks = getnavdictfromparamsdict(
+         {  'art_paintingid': 0,
+            'art_appointmentid': art_appointmentid,
+            'art_clientid': art_appointment.objects.get(pk = art_appointmentid).art_clientid.id
+         },
+         request.path_info
+      )
       context = {
          'form': thisform,
-         'art_appointmentid': art_appointment_id
+         'art_appointmentid': art_appointmentid,
+         'dnavlinks': dnavlinks
       }
       return render(request, 'trackart/paintingwrite.html', context=context)
 
-   def post(self, request, art_appointment_id):
+   def post(self, request, art_appointmentid):
       thisform = PaintingForm(request.POST)
       if thisform.is_valid():
          ## process:
          ## 1) write the painting:
          qpaint = art_painting.objects.create(
-            art_appointmentid = art_appointment.objects.get(pk = art_appointment_id),
+            art_appointmentid = art_appointment.objects.get(pk = art_appointmentid),
             art_paintingtitle = thisform.cleaned_data.get('art_paintingtitle')
          )
          qpaint.save()
@@ -381,14 +420,22 @@ class PaintingNew(TemplateView):
          qpaint.clientmoods.set( thisform.cleaned_data.get('clientmoods') )
 
          ## go to Painting:
-         return HttpResponseRedirect('/appointment/' + str(art_appointment_id) + '/painting/' + str(qpaint.id));
+         return HttpResponseRedirect('/appointment/' + str(art_appointmentid) + '/painting/' + str(qpaint.id));
       else:
          ## send them back to the form:
          ##   >> REFACTOR >>  WHY DO I HAVE TO REPLICATE THIS IN THE 'GET' AND POST?
          form = PaintingForm(request.POST)
+         dnavlinks = getnavdictfromparamsdict(
+            {  'art_paintingid': 0,
+               'art_appointmentid': art_appointmentid,
+               'art_clientid': art_appointment.objects.get(pk = art_appointmentid).art_clientid.id
+            },
+            request.path_info
+         )
          context = {
             'form': thisform,
-            'art_appointmentid': art_appointment_id
+            'art_appointmentid': art_appointmentid,
+            'dnavlinks': dnavlinks
          }
          return render(request, 'trackart/paintingwrite.html', context=context)
 
@@ -396,8 +443,8 @@ class PaintingNew(TemplateView):
 ###
 
 class PaintingWrite(TemplateView):
-   def get(self, request, art_appointment_id, art_painting_id):
-      qpaint = art_painting.objects.filter(pk=art_painting_id)
+   def get(self, request, art_appointmentid, art_paintingid):
+      qpaint = art_painting.objects.filter(pk=art_paintingid)
       if len(qpaint) == 1:
          qrow = qpaint[0]
          thisform = PaintingForm(
@@ -407,36 +454,52 @@ class PaintingWrite(TemplateView):
                'clientmoods': qrow.clientmoods.all()
             }
          )
+         dnavlinks = getnavdictfromparamsdict(
+            {  'art_paintingid': art_paintingid,
+               'art_appointmentid': art_appointmentid,
+               'art_clientid': qrow.art_appointmentid.art_clientid.id
+            },
+            request.path_info
+         )
          thiscontext = {
             'qonepainting': qrow,
-            'pkid': art_painting_id,
-            'art_appointmentid': art_appointment_id,
-            'form': thisform
+            'pkid': art_paintingid,
+            'art_appointmentid': art_appointmentid,
+            'form': thisform,
+            'dnavlinks': dnavlinks
          }
          return render(request, 'trackart/paintingwrite.html', context=thiscontext)
       else:
          return HttpResponseRedirect('/paintingnotfound')
       
-   def post(self, request, art_appointment_id, art_painting_id):
+   def post(self, request, art_appointmentid, art_paintingid):
       thisform = PaintingForm(request.POST)
       if thisform.is_valid():
          ## process:
          ## 1:  (Update the core table)
-         art_painting.objects.filter(id=art_painting_id).update(
+         art_painting.objects.filter(id=art_paintingid).update(
             art_paintingtitle = thisform.cleaned_data.get("art_paintingtitle")
          )
          
          ## 2:  update the Set:
-         art_painting.objects.filter(id=art_painting_id)[0].paintcolors.set( thisform.cleaned_data.get('paintcolors') )
-         art_painting.objects.filter(id=art_painting_id)[0].clientmoods.set( thisform.cleaned_data.get('clientmoods') )
+         art_painting.objects.filter(id=art_paintingid)[0].paintcolors.set( thisform.cleaned_data.get('paintcolors') )
+         art_painting.objects.filter(id=art_paintingid)[0].clientmoods.set( thisform.cleaned_data.get('clientmoods') )
          ## redirect
-         return HttpResponseRedirect('/appointment/' + str(art_appointment_id) + '/painting/' + str(art_painting_id));
+         return HttpResponseRedirect('/appointment/' + str(art_appointmentid) + '/painting/' + str(art_paintingid));
       else:
          ##   >> REFACTOR >>  WHY DO I HAVE TO REPLICATE THIS IN THE 'GET' AND POST?
          form = PaintingForm(request.POST)
+         dnavlinks = getnavdictfromparamsdict(
+            {  'art_paintingid': art_paintingid,
+               'art_appointmentid': art_appointmentid,
+               'art_clientid': art_appointment.objects.get(pk = art_appointmentid).art_clientid.id
+            },
+            request.path_info
+         )
          context = {
             'form': thisform,
-            'art_appointmentid': art_appointment_id
+            'art_appointmentid': art_appointmentid,
+            'dnavlinks': dnavlinks
          }
          return render(request, 'trackart/paintingwrite.html', context=context)
 
@@ -444,7 +507,7 @@ class PaintingWrite(TemplateView):
 ##
 
 class PaintingDelete(TemplateView):
-   def get(self, request, art_appointment_id, art_painting_id):
-      art_painting.objects.filter(id=art_painting_id).delete()
-      return HttpResponseRedirect('/appointment/' + str(art_appointment_id))
+   def get(self, request, art_appointmentid, art_paintingid):
+      art_painting.objects.filter(id=art_paintingid).delete()
+      return HttpResponseRedirect('/appointment/' + str(art_appointmentid))
 
