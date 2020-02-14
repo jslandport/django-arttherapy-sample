@@ -16,9 +16,11 @@ def getnavdictfromparamsdict(dparams, cururl):
                dnav[thislink] = 'This Appointment'
          dnav['/viewappointments'] = 'All Appointments'
       elif thiskey == 'art_paintingid':
-         if dparams[thiskey] > 0 & dparams['art_appointmentid'] > 0:
-            thislink = '/appointment/' + dparams['art_appointmentid'] + '/painting/' + str(dparams[thiskey])
+         ## should we link to this painting?
+         if dparams[thiskey] > 0 and dparams.get('art_appointmentid') > 0:
+            thislink = '/appointment/' + str(dparams['art_appointmentid']) + '/painting/' + str(dparams[thiskey])
             if cururl != thislink:
                dnav[thislink] = 'This Painting'
-         dnav['/viewappointments'] = 'All Paintings'
+         ## link to list-of-paintings
+         dnav['/viewpaintings'] = 'All Paintings'
    return dnav
