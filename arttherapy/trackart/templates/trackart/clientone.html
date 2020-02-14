@@ -7,16 +7,15 @@ EXPECTED INCOMING PARAMETERS:
 <html>
    <head>
         <meta charset="utf-8">
-        <title>TrackArt:  Client-Centric View</title>
+        <title>TrackArt:  Client</title>
         {% include "trackart/part_headtemplate.html" %}
    </head>
    <body>
-      {% include "trackart/part_bodytemplate.html" %}
       <h1>TrackArt Client {{ pkid }}:</h1>
+      {% include "trackart/part_bodytemplate.html" %}
       <div class="series">
          <div><a href="/clientwrite/{{ pkid }}">Edit Client</a></div>
          <div><a href="/clientdelete/{{ pkid }}" onclick="return confirm('This will delete this client\n\nOK to DELETE, Cancel to stop')">Delete Client</a></div>
-         <div><a href="/viewclients">Back to Client-Centric View</a></div>
       </div>
       <div class="postseries"></div>
 

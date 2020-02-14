@@ -10,15 +10,13 @@ OPTIONAL INCOMING PARAMETERS (for Edits):
         {% include "trackart/part_headtemplate.html" %}
    </head>
    <body>
-      {% include "trackart/part_bodytemplate.html" %}
       <h1>TrackArt Appointment {{ pkid }}:</h1>
+      {% include "trackart/part_bodytemplate.html" %}
       
       {% if pkid %}
-         <p><a href="/appointment/{{ pkid }}">Back to Appointment WITHOUT saving</a></p>
          <h3>Appointment Id {{ pkid }}
          <form action="/appointmentwrite/{{ pkid }}" method="post">
       {% else %}
-         <p><a href="/viewappointments">Back to Appointment-Centric View WITHOUT saving</a></p>
          <h3>New Appointment</h3>
          <form action="/appointmentnew" method="post">
       {% endif %}

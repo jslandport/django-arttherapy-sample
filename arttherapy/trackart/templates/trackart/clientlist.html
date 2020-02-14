@@ -5,16 +5,16 @@ EXPECTED INCOMING PARAMETERS:
 <html>
    <head>
       <meta charset="utf-8">
-      <title>TrackArt:  Client-Centric View</title>
+      <title>TrackArt:  All Clients</title>
       {% include "trackart/part_headtemplate.html" %}
    </head>
    <body>
+      <h1>TrackArt All Clients</h1>
       {% include "trackart/part_bodytemplate.html" %}
-      <h1>TrackArt Client-Centric View</h1>
-      <p>
+      <div class="series">
          <div><a href="/clientnew">Add a Client</a></div>
-         <div><a href="/">Back to Index</a></div>
-      </p>
+      </div>
+      <div class="postseries"></div>
 
 {% if qclient %}
    <ul>

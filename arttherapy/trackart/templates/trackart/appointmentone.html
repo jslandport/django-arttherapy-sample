@@ -7,17 +7,15 @@ EXPECTED INCOMING PARAMETERS:
 <html>
    <head>
         <meta charset="utf-8">
-        <title>TrackArt:  Appointment-Centric View</title>
+        <title>TrackArt:  Appointment</title>
         {% include "trackart/part_headtemplate.html" %}
    </head>
    <body>
-      {% include "trackart/part_bodytemplate.html" %}
       <h1>TrackArt Appointment {{ pkid }}:</h1>
+      {% include "trackart/part_bodytemplate.html" %}
       <div class="series">
          <div><a href="/appointmentwrite/{{ pkid }}">Edit Appointment</a></div>
          <div><a href="/appointmentdelete/{{ pkid }}" onclick="return confirm('This will Delete this appointment\n\nOK to DELETE, Cancel to stop')">Delete Appointment</a></div>
-         <div><a href="/client/{{ qoneappointment.art_clientid.pk }}">Back to Client</a></div>
-         <div><a href="/viewappointments">Back to Appointment-Centric View</a></div>
       </div>
       <div class="postseries"></div>
 
