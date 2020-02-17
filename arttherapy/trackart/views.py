@@ -15,6 +15,9 @@ from .models import clientmood
 
 from .navhelper import getnavdictfromparamsdict
 
+## for 'default new Appointment to the current datetime'
+import datetime
+
 
 #############################
 ##
@@ -263,7 +266,9 @@ class AppointmentView(TemplateView):
 
 class AppointmentNew(TemplateView):
    def get(self, request):
-      thisdata = {}
+      thisdata = {
+         'art_appointmenttime': datetime.datetime.now().strftime("%Y-%m-%dT%H:%M")
+      }
       if 'art_clientid' in request.GET.keys():
          thisdata['art_clientid'] = request.GET['art_clientid']
       thisform = AppointmentForm(thisdata)
