@@ -2,19 +2,21 @@ body { margin:0px; padding:4px }
 
 h1, h2, h3, h4 { color:#955 }
 
-h1 { margin:0px; padding-top:0px }
+h1 { margin:8px 0px 18px 0px; font-size:28px }
+h2 { font-size:24px }
+h3 { font-size:20px }
 
 A, A:link, A:visited, A:active, A:hover { color:#b73 }
 
-.generalnav { margin:12px -4px 12px -4px; padding:4px; background-color:#900 }
+.generalnav { margin:-4px -4px 12px -4px; padding:4px; background-color:#900 }
 .generalnav A, .generalnav A:link, .generalnav A:visited, .generalnav A:active, .generalnav A:hover { color:#fca }
 .generalnavbits div { margin-right:15px; position:relative; display:inline }
 
 .none { font-style:italic; color:#888 }
 
-.error { font-weight:bold; color:#f00 }
+.error, .errorlist { font-weight:bold; color:#f00 }
 
 .series { display:inline }
 .series div { float:left; margin-right:20px; font-weight:bold }
 
-.postseries { clear:both; height:5px }
+.postseries { clear:both; height:8px }
