@@ -12,14 +12,13 @@ OPTIONAL INCOMING PARAMETERS (for Edits):
         {% include "trackart/part_headtemplate.html" %}
    </head>
    <body>
-      <h1>TrackArt Painting for Appointment {{ art_appointmentid }}:</h1>
       {% include "trackart/part_bodytemplate.html" %}
       
       {% if pkid %}
-         <h3>Painting Id {{ pkid }}
+         <h1>Painting Id {{ pkid }}</h1>
          <form action="/appointment/{{ art_appointmentid }}/paintingwrite/{{ pkid }}" method="post">
       {% else %}
-         <h3>New Painting</h3>
+         <h1>New Painting</h1>
          <form action="/appointment/{{ art_appointmentid }}/paintingnew" method="post">
       {% endif %}
 		

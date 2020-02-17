@@ -11,22 +11,22 @@ EXPECTED INCOMING PARAMETERS:
         {% include "trackart/part_headtemplate.html" %}
    </head>
    <body>
-      <h1>TrackArt Appointment {{ pkid }}:</h1>
       {% include "trackart/part_bodytemplate.html" %}
-      <div class="series">
-         <div><a href="/appointmentwrite/{{ pkid }}">Edit Appointment</a></div>
-         <div><a href="/appointmentdelete/{{ pkid }}" onclick="return confirm('This will Delete this appointment\n\nOK to DELETE, Cancel to stop')">Delete Appointment</a></div>
-      </div>
-      <div class="postseries"></div>
 
       {% if qoneappointment %}
    
-         <h3>
+         <h1>
             Appointment for
             {{ qoneappointment }}
-         </h3>
+         </h1>
+         <div class="series">
+            <div><a href="/appointmentwrite/{{ pkid }}">Edit Appointment</a></div>
+            <div><a href="/appointmentdelete/{{ pkid }}" onclick="return confirm('This will Delete this appointment\n\nOK to DELETE, Cancel to stop')">Delete Appointment</a></div>
+         </div>
+         <div class="postseries"></div>
+
          {% if qspainting %}
-            <h4>Paintings</h4>
+            <h2>Paintings</h2>
             <div><a href="/appointment/{{ pkid }}/paintingnew">Add a Painting</a></div>
             <ol>
                {% for qp in qspainting %}
@@ -34,13 +34,13 @@ EXPECTED INCOMING PARAMETERS:
                {% endfor %}
             </ol>
          {% else %}
-            <h4 class="none">No Paintings</h4>
+            <h2 class="none">No Paintings</h2>
             <div><a href="/appointment/{{ pkid }}/paintingnew">Add a Painting</a></div>
          {% endif %}
          
    
       {% else %}
-         <h3 class="error">Appointment not found</h3>
+         <h2 class="error">Appointment not found</h2>
       {% endif %}
    </body>
 </html>

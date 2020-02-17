@@ -6,11 +6,11 @@
       {% include "trackart/part_headtemplate.html" %}
    </head>
    <body>
-      <h1>TrackArt Application</h1>
       {% include "trackart/part_bodytemplate.html" %}
+      <h1>Features</h1>
+      
       {% if dfeatures %}
          <div class="series">
-            <div>Features:</div>
             {% for key, value in dfeatures.items %}
             	<div><a href="{{ key }}">{{ value }}</a></div>
             {% endfor %}

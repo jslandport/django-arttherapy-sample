@@ -11,22 +11,21 @@ EXPECTED INCOMING PARAMETERS:
         {% include "trackart/part_headtemplate.html" %}
    </head>
    <body>
-      <h1>TrackArt Client {{ pkid }}:</h1>
       {% include "trackart/part_bodytemplate.html" %}
-      <div class="series">
-         <div><a href="/clientwrite/{{ pkid }}">Edit Client</a></div>
-         <div><a href="/clientdelete/{{ pkid }}" onclick="return confirm('This will delete this client\n\nOK to DELETE, Cancel to stop')">Delete Client</a></div>
-      </div>
-      <div class="postseries"></div>
 
       {% if qoneclient %}
       
-         <h3>{{ qoneclient }}
-         </h3>
+         <h1>{{ qoneclient }}</h1>
+         <div class="series">
+            <div><a href="/clientwrite/{{ pkid }}">Edit Client</a></div>
+            <div><a href="/clientdelete/{{ pkid }}" onclick="return confirm('This will delete this client\n\nOK to DELETE, Cancel to stop')">Delete Client</a></div>
+         </div>
+         <div class="postseries"></div>
+         
          <div>DOB: {{ qoneclient.art_clientdob }}</div>
       
          {% if qsappointment %}
-            <h4>Appointments</h4>
+            <h2>Appointments</h2>
             <div><a href="/appointmentnew?art_clientid={{ pkid }}">Add an Appointment</div>
             <ol>
                {% for qa in qsappointment %}
@@ -34,13 +33,13 @@ EXPECTED INCOMING PARAMETERS:
                {% endfor %}
             </ol>
          {% else %}
-            <h4 class="none">No Appointments</h4>
+            <h2 class="none">No Appointments</h2>
             <div><a href="/appointmentnew?art_clientid={{ pkid }}">Add an Appointment</div>
          {% endif %}
          
       
       {% else %}
-         <h3 class="error">Client not found</h3>
+         <h1 class="error">Client not found</h1>
       {% endif %}
    </body>
 </html>

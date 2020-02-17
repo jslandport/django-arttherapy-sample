@@ -10,14 +10,13 @@ OPTIONAL INCOMING PARAMETERS (for Edits):
         {% include "trackart/part_headtemplate.html" %}
    </head>
    <body>
-      <h1>TrackArt Client {{ pkid }}:</h1>
       {% include "trackart/part_bodytemplate.html" %}
       
       {% if pkid %}
-         <h3>Client Id {{ pkid }}
+         <h1>Client Id {{ pkid }}</h1>
          <form action="/clientwrite/{{ pkid }}" method="post">
       {% else %}
-         <h3>New Client</h3>
+         <h1>New Client</h1>
          <form action="/clientnew" method="post">
       {% endif %}
 		

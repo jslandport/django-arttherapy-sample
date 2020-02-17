@@ -10,21 +10,21 @@ EXPECTED INCOMING PARAMETERS:
         {% include "trackart/part_headtemplate.html" %}
    </head>
    <body>
-      <h1>TrackArt Painting {{ pkid }}:</h1>
       {% include "trackart/part_bodytemplate.html" %}
+
+   {% if qpainting %}
+
+      <h1>{{ qpainting }}</h1>
+
       <div class="series">
          <div><a href="/appointment/{{ qpainting.art_appointmentid.pk }}/paintingwrite/{{ pkid }}">Edit Painting</a></div>
          <div><a href="/appointment/{{ qpainting.art_appointmentid.pk }}/paintingdelete/{{ pkid }}" onclick="return confirm('This will DELETE this painting\n\nOK to DELETE, Cancel to stop')">Delete Painting</a></div>
       </div>
       <div class="postseries"></div>
 
-   {% if qpainting %}
-
-      <h3>{{ qpainting }}</h3>
-
       <div>Last Updated {{ qpainting.lastupdated }}</div>
       
-      <h4>Color(s) used in painting:</h4>
+      <h2>Color(s) used in painting:</h2>
       {% if qpainting.paintcolors.all %}
          <ol>
             {% for qa in qpainting.paintcolors.all %}
@@ -35,7 +35,7 @@ EXPECTED INCOMING PARAMETERS:
          <div class="none">None</div>
       {% endif %}
                
-      <h4>Mood(s) during painting:</h4>
+      <h2>Mood(s) during painting:</h2>
       {% if qpainting.clientmoods.all %}
          <ol>
          {% for qa in qpainting.clientmoods.all %}
@@ -48,7 +48,10 @@ EXPECTED INCOMING PARAMETERS:
       
 
    {% else %}
-      <h3 class="none">Painting not found</h3>
+      {% comment %}
+      this should never happen as we're already confirming we have a painting before this page is called
+      {% endcomment %}
+      <h3 class="none">Painting not found</h2>
    {% endif %}
    </body>
 </html>
