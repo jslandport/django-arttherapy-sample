@@ -8,9 +8,14 @@ h3 { font-size:20px }
 
 A, A:link, A:visited, A:active, A:hover { color:#b73 }
 
-.generalnav { margin:-4px -4px 12px -4px; padding:4px; background-color:#900 }
+.generalnav { margin:-4px -4px 12px -4px; padding:4px; background-color:#900; color:#fff }
 .generalnav A, .generalnav A:link, .generalnav A:visited, .generalnav A:active, .generalnav A:hover { color:#fca }
-.generalnavbits div { margin-right:15px; position:relative; display:inline }
+.generalnavbits { clear:both }
+.generalnavbits div { display:inline }
+
+.generalnavback { float:right }
+.generalnavback div { margin-left:15px; margin-right:0px }
+.generalnavcrumb div { margin-right:15px; position:relative }
 
 .none { font-style:italic; color:#888 }
 
