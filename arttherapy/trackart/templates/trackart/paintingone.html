@@ -13,8 +13,10 @@ EXPECTED INCOMING PARAMETERS:
       {% include "trackart/part_bodytemplate.html" %}
 
    {% if qpainting %}
-
-      <h1>{{ qpainting }}</h1>
+      {% comment %}
+      >> TO REFACTOR >> I'd rather be able to just output {{ qpainting }}, but I can't get the __str__(self) method in models.py, which creates that string value, to create TIMEZONE AWARE datetimes.
+      {% endcomment %}
+      <h1>{{ qpainting.art_paintingtitle }}, created at {{ qpainting.createDate }}</h1>
 
       <div class="series">
          <div><a href="/appointment/{{ qpainting.art_appointmentid.pk }}/paintingwrite/{{ pkid }}">Edit Painting</a></div>
