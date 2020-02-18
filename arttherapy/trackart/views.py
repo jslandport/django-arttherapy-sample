@@ -152,7 +152,7 @@ class ClientNew(TemplateView):
          return HttpResponseRedirect('/client/' + str(qc.id));
       else:
          ## send them back to the form:
-         ##   >> REFACTOR >>  WHY DO I HAVE TO REPLICATE THIS IN THE 'GET' AND POST?
+         ##   >> TO REFACTOR >>  WHY DO I HAVE TO REPLICATE THIS IN THE 'GET' AND POST?
          form = ClientForm(request.POST)
          context = {
             'form': thisform,
@@ -193,15 +193,15 @@ class ClientWrite(TemplateView):
       thisform = ClientForm(request.POST)
       if thisform.is_valid():
          ## process;
-         art_client.objects.filter(id=art_clientid).update(
-            art_clientfirstname = thisform.cleaned_data.get("art_clientfirstname"),
-            art_clientlastname = thisform.cleaned_data.get("art_clientlastname"),
-            art_clientdob = thisform.cleaned_data.get("art_clientdob")
-         )
-         ##qc.save()
+         qc = art_client.objects.get(id=art_clientid)
+         qc.art_clientfirstname = thisform.cleaned_data.get("art_clientfirstname")
+         qc.art_clientlastname = thisform.cleaned_data.get("art_clientlastname")
+         qc.art_clientdob = thisform.cleaned_data.get("art_clientdob")
+         ## this commits that AND changes LastUpdated:
+         qc.save()
          return HttpResponseRedirect('/client/' + str(art_clientid));
       else:
-         ##   >> REFACTOR >>  WHY DO I HAVE TO REPLICATE THIS IN THE 'GET' AND POST?
+         ##   >> TO REFACTOR >>  WHY DO I HAVE TO REPLICATE THIS IN THE 'GET' AND POST?
          thisdata = {
             'art_clientfirstname': thisform.cleaned_data.get("art_clientfirstname"),
             'art_clientlastname': thisform.cleaned_data.get("art_clientlastname"),
@@ -296,7 +296,7 @@ class AppointmentNew(TemplateView):
          return HttpResponseRedirect('/appointment/' + str(qa.id));
       else:
          ## send them back to the form:
-         ##   >> REFACTOR >>  WHY DO I HAVE TO REPLICATE THIS IN THE 'GET' AND POST?
+         ##   >> TO REFACTOR >>  WHY DO I HAVE TO REPLICATE THIS IN THE 'GET' AND POST?
          form = AppointmentForm(request.POST)
          dnavlinks = getnavdictfromparamsdict(
             {  'art_appointmentid': 0 },
@@ -342,13 +342,14 @@ class AppointmentWrite(TemplateView):
       thisform = AppointmentForm(request.POST)
       if thisform.is_valid():
          ## process;
-         art_appointment.objects.filter(id=art_appointmentid).update(
-            art_clientid = thisform.cleaned_data.get("art_clientid"),
-            art_appointmenttime = thisform.cleaned_data.get("art_appointmenttime")
-         )
+         qa = art_appointment.objects.get(id=art_appointmentid)
+         qa.art_clientid = thisform.cleaned_data.get("art_clientid")
+         qa.art_appointmenttime = thisform.cleaned_data.get("art_appointmenttime")
+         ## this commits that AND changes LastUpdated:
+         qa.save()
          return HttpResponseRedirect('/appointment/' + str(art_appointmentid));
       else:
-         ##   >> REFACTOR >>  WHY DO I HAVE TO REPLICATE THIS IN THE 'GET' AND POST?
+         ##   >> TO REFACTOR >>  WHY DO I HAVE TO REPLICATE THIS IN THE 'GET' AND POST?
          thisdata = {
             'art_clientid': thisform.cleaned_data.get("art_clientid"),
             'art_appointmenttime': thisform.cleaned_data.get("art_appointmenttime")
@@ -444,7 +445,7 @@ class PaintingNew(TemplateView):
          return HttpResponseRedirect('/appointment/' + str(art_appointmentid) + '/painting/' + str(qpaint.id));
       else:
          ## send them back to the form:
-         ##   >> REFACTOR >>  WHY DO I HAVE TO REPLICATE THIS IN THE 'GET' AND POST?
+         ##   >> TO REFACTOR >>  WHY DO I HAVE TO REPLICATE THIS IN THE 'GET' AND POST?
          form = PaintingForm(request.POST)
          dnavlinks = getnavdictfromparamsdict(
             {  'art_paintingid': 0,
@@ -498,17 +499,17 @@ class PaintingWrite(TemplateView):
       if thisform.is_valid():
          ## process:
          ## 1:  (Update the core table)
-         art_painting.objects.filter(id=art_paintingid).update(
-            art_paintingtitle = thisform.cleaned_data.get("art_paintingtitle")
-         )
-         
+         qp = art_painting.objects.get(id=art_paintingid)
+         qp.art_paintingtitle = thisform.cleaned_data.get("art_paintingtitle")
+         ## this commits that AND changes LastUpdated:
+         qp.save()
          ## 2:  update the Set:
          art_painting.objects.filter(id=art_paintingid)[0].paintcolors.set( thisform.cleaned_data.get('paintcolors') )
          art_painting.objects.filter(id=art_paintingid)[0].clientmoods.set( thisform.cleaned_data.get('clientmoods') )
          ## redirect
          return HttpResponseRedirect('/appointment/' + str(art_appointmentid) + '/painting/' + str(art_paintingid));
       else:
-         ##   >> REFACTOR >>  WHY DO I HAVE TO REPLICATE THIS IN THE 'GET' AND POST?
+         ##   >> TO REFACTOR >>  WHY DO I HAVE TO REPLICATE THIS IN THE 'GET' AND POST?
          form = PaintingForm(request.POST)
          dnavlinks = getnavdictfromparamsdict(
             {  'art_paintingid': art_paintingid,
