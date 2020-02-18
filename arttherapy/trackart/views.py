@@ -97,7 +97,7 @@ class ClientView(TemplateView):
       ##{ '/viewclients': 'Client-Centric View' }
       if len(qsclient) == 1:
          qrow = qsclient[0]
-         qsapt = art_appointment.objects.filter(art_clientid = art_clientid)
+         qsapt = art_appointment.objects.filter(art_clientid = art_clientid).order_by('-art_appointmenttime')
          context = {
             'qoneclient': qrow,
             'qsappointment': qsapt,
@@ -241,7 +241,7 @@ class AppointmentView(TemplateView):
       qsappointment = art_appointment.objects.filter(pk=art_appointmentid)
       if len(qsappointment) == 1:
          qrow = qsappointment[0]
-         qspainting = art_painting.objects.filter(art_appointmentid = art_appointmentid).order_by('createDate')
+         qspainting = art_painting.objects.filter(art_appointmentid = art_appointmentid).order_by('-createDate')
          dnavlinks = getnavdictfromparamsdict(
             {  'art_appointmentid': art_appointmentid,
                'art_clientid': qrow.art_clientid.id
