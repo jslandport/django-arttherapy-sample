@@ -1,18 +1,18 @@
 from django.db import models
 
-# Create your models here.
 
+'''
+this was an attempt to standardize __str__(self) date-formatting;
+HOWEVER after extensive research I haven't been able to get __str__(self) to be able to stamp Datetimes into TIME-ZONE-AWARE times, so I won't be using it on the Template front-end, instead I'll just display the fields AND times to the template front-end, where it AUTOMATICALLY time-zone-corrects.
+'''
 myjustdate = "%m/%d/%Y"
 myfulltime = myjustdate+" %I:%M:%S %p"
 
 
+
 '''
 schema:
-
-NOTE - evidently you don't specify PKid-s, they're just "implicit", and you "implicitly" foreign-key to the table itself.
 '''
-
-
 ## CORE TABLES:
 
 class art_client(models.Model):
@@ -30,8 +30,7 @@ class art_appointment(models.Model):
    art_appointmenttime = models.DateTimeField( blank=False, null=False )
    ## 'summary' of a row, for various admin / display purposes baked into django
    def __str__(self):
-      return self.art_clientid.__str__() + ' at '+self.art_appointmenttime.strftime(myfulltime)
-
+      return self.art_clientid.__str__() + ' at '+ self.art_appointmenttime.strftime(myfulltime)
 
 ## LOOKUP TABLES:
 
@@ -63,3 +62,4 @@ class art_painting(models.Model):
    ## 'summary' of a row, for various admin / display purposes baked into django
    def __str__(self):
       return self.art_paintingtitle + ', created ' + self.createDate.strftime(myfulltime)
+      
