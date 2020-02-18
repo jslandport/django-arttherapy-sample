@@ -18,7 +18,10 @@ EXPECTED INCOMING PARAMETERS:
       {% if qsappointment %}
          <ol>
          {% for qrow in qsappointment %}
-           <li><a href="./appointment/{{ qrow.id }}">{{ qrow }}</a></li>
+            {% comment %}
+            >> TO REFACTOR >> I'd rather be able to just output {{ qrow }}, but I can't get the __str__(self) method in models.py, which creates that string value, to create TIMEZONE AWARE datetimes.
+            {% endcomment %}
+            <li><a href="./appointment/{{ qrow.id }}">{{ qrow.art_clientid }} at {{ qrow.art_appointmenttime }}</a></li>
          {% endfor %}
          </ol>
       {% else %}
