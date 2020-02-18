@@ -21,8 +21,10 @@ EXPECTED INCOMING PARAMETERS:
             <div><a href="/clientdelete/{{ pkid }}" onclick="return confirm('This will delete this client\n\nOK to DELETE, Cancel to stop')">Delete Client</a></div>
          </div>
          <div class="postseries"></div>
+        
+         <p>Last Updated: {{ qoneclient.lastupdated }}</p>
          
-         <div>DOB: {{ qoneclient.art_clientdob }}</div>
+         <p>DOB: {{ qoneclient.art_clientdob }}</p>
       
          {% if qsappointment %}
             <h2>Appointments</h2>
