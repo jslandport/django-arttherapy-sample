@@ -35,10 +35,7 @@ EXPECTED INCOMING PARAMETERS:
             <div><a href="/appointment/{{ pkid }}/paintingnew">Add a Painting</a></div>
             <ol>
                {% for qp in qspainting %}
-                  {% comment %}
-                  >> TO REFACTOR >> I'd rather be able to just output {{ qp }}, but I can't get the __str__(self) method in models.py, which creates that string value, to create TIMEZONE AWARE datetimes.
-                  {% endcomment %}
-                  <li><a href="/appointment/{{ pkid }}/painting/{{ qp.id }}">{{ qp.art_paintingtitle }}, created {{ qp.createDate }}</a></li>
+                  <li><a href="/appointment/{{ pkid }}/painting/{{ qp.id }}">{{ qp.art_paintingtitle }}</a></li>
                {% endfor %}
             </ol>
          {% else %}
