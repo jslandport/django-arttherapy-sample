@@ -15,8 +15,7 @@ OPTIONAL INCOMING PARAMETERS:
    </head>
    <body>
       {% include "trackart/part_bodytemplate.html" %}
-      <h1>Painting Color/Mood Count Report</h1>
-      <div>The overall counts are below, select 1 or more items to get drill-down details:</div>
+      <h1>Painting Color/Mood Count Report Results:</h1>
       <div class="layoutchunk">
             
    
@@ -41,7 +40,7 @@ OPTIONAL INCOMING PARAMETERS:
                <h2>Moods drilldown:</h2>
                <ul>
                   {% for mood, qscolor in dclientmoodxqs.items %}
-                     <li>paintings with <strong>{{ mood }}</strong> had these colors:
+                     <li>when the client was <strong>{{ mood }}</strong> they used these colors:
                         <ol>
                            {% for qr in qscolor %}
                               <li><strong>{{ qr.paintcolortitle }}</strong> in {{ qr.paintingcount }} paintings ({{ qr.paintingpercent }}% of {{ mood }} paintings)</li>
