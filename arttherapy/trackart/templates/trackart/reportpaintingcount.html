@@ -1,0 +1,48 @@
+{% comment %}
+EXPECTED INCOMING PARAMETERS:
+   dnavlinks   -used in trackart/part_bodytemplate.html
+   
+   qcolorcount -paintcolor query including paintingcount
+   qmoodcount  -clientmood query including paintingcount
+{% endcomment %}<!DOCTYPE html>
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <title>TrackArt Reports:  Painting Color/Mood Count</title>
+      {% include "trackart/part_headtemplate.html" %}
+   </head>
+   <body>
+      {% include "trackart/part_bodytemplate.html" %}
+      <h1>Painting Color/Mood Count Report</h1>
+      <div>The overall counts are below, select 1 or more items to get drill-down details:</div>
+      <form action="/report/paintingcounts" method="post">
+         {% csrf_token %}
+         <div class="layoutchunk">
+            {% comment %}
+            Maybe django would prefer if I use FORM-s for this, but given that the form is entirely dynamic, and validation is trivial, that doesn't seem like the right thing to do.
+            {% endcomment %}
+   
+            <div class="layoutslice">
+               <h2>Colors:</h2>
+               <ul>
+                  {% for qrow in qcolorcount %}
+                    <li><input type="checkbox" name="lcolors" id="lcolors_{{ qrow.id }}" value="{{ qrow.id }}"/><label for="lcolors_{{ qrow.id }}">{{ qrow }}, in {{ qrow.paintingcount }} paintings</label></li>
+                  {% endfor %}
+               </ul>
+            </div>
+            <div class="layoutslice">
+               <h2>Moods:</h2>
+               <ul>
+                  {% for qrow in qmoodcount %}
+                    <li><input type="checkbox" name="lmoods" id="lmoods_{{ qrow.id }}" value="{{ qrow.id }}"/><label for="lmoods_{{ qrow.id }}">{{ qrow }}, in {{ qrow.paintingcount }} paintings</label></li>
+                  {% endfor %}
+               </ul>
+            </div>
+         </div>
+         <div class="layoutchunk">
+            <input type="submit" value="Drill-Down Report"/>
+         </div>
+      </form>
+   </body>
+</html>

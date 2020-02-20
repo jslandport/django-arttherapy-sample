@@ -1,0 +1,30 @@
+{% comment %}
+EXPECTED INCOMING PARAMETERS:
+   dreports    -dictionary of implemented Reports (key=link, value=description)
+
+OPTIONAL INCOMING PARAMETERS
+   dnavlinks   -used in trackart/part_bodytemplate.html
+{% endcomment %}<!DOCTYPE html>
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <title>TrackArt Application: Reporting</title>
+      {% include "trackart/part_headtemplate.html" %}
+   </head>
+   <body>
+      {% include "trackart/part_bodytemplate.html" %}
+      <h1>Reporting</h1>
+      
+      {% if dreports %}
+         <div class="series">
+            {% for key, value in dreports.items %}
+            	<div><a href="{{ key }}">{{ value }}</a></div>
+            {% endfor %}
+         </div>
+         <div class="postseries"></div>
+      {% else %}
+         <p><em>No Reports Implemented</em></p>
+      {% endif %}
+   </body>
+</html>

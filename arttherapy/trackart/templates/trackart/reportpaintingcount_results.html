@@ -1,0 +1,56 @@
+{% comment %}
+EXPECTED INCOMING PARAMETERS:
+   dnavlinks   -used in trackart/part_bodytemplate.html
+
+OPTIONAL INCOMING PARAMETERS:
+   dpaintcolorxqs
+   dclientmoodxqs
+{% endcomment %}<!DOCTYPE html>
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <title>TrackArt Reports:  Painting Color/Mood Count</title>
+      {% include "trackart/part_headtemplate.html" %}
+   </head>
+   <body>
+      {% include "trackart/part_bodytemplate.html" %}
+      <h1>Painting Color/Mood Count Report</h1>
+      <div>The overall counts are below, select 1 or more items to get drill-down details:</div>
+      <div class="layoutchunk">
+            
+   
+         {% if dpaintcolorxqs %}
+            <div class="layoutslice">     
+               <h2>Colors drilldown:</h2>
+               <ul>
+                  {% for color, qsmood in dpaintcolorxqs.items %}
+                     <li>paintings with <strong>{{ color }}</strong> had these moods:
+                        <ol>
+                           {% for qr in qsmood %}
+                              <li><strong>{{ qr.clientmoodtitle }}</strong> in {{ qr.paintingcount }} paintings ({{ qr.paintingpercent }}% of {{ color}} paintings)</li>
+                           {% endfor %}
+                        </ol>
+                  {% endfor %}
+               </ul>
+            </div>
+         {% endif %}
+   
+         {% if dclientmoodxqs %}
+            <div class="layoutslice">
+               <h2>Moods drilldown:</h2>
+               <ul>
+                  {% for mood, qscolor in dclientmoodxqs.items %}
+                     <li>paintings with <strong>{{ mood }}</strong> had these colors:
+                        <ol>
+                           {% for qr in qscolor %}
+                              <li><strong>{{ qr.paintcolortitle }}</strong> in {{ qr.paintingcount }} paintings ({{ qr.paintingpercent }}% of {{ mood }} paintings)</li>
+                           {% endfor %}
+                        </ol>
+                  {% endfor %}
+               </ul>
+            </div>
+         {% endif %}
+      </div>
+   </body>
+</html>
