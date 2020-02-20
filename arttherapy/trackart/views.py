@@ -6,12 +6,14 @@ from django.http import HttpResponse, HttpResponseRedirect
 from .forms import ClientForm
 from .forms import AppointmentForm
 from .forms import PaintingForm
-## from trackart import templates
+
 from .models import art_client
 from .models import art_appointment
 from .models import art_painting
 from .models import paintcolor
 from .models import clientmood
+
+
 
 from .navhelper import getnavdictfromparamsdict
 
@@ -33,6 +35,7 @@ class HomePageView(TemplateView):
          './viewclients': 'All Clients',
          './viewappointments':  'All Appointments',
          './viewpaintings':  'All Paintings',
+         './reports':  'Reporting',
       }
       context = {
          'dfeatures': dfeatures
@@ -57,7 +60,6 @@ class AppointmentCentricListView(TemplateView):
       context = {
          'qsappointment': qsappointment
       }
-      print(qsappointment)
       return render(request, 'trackart/appointmentlist.html', context=context)
 
 
@@ -286,7 +288,6 @@ class AppointmentNew(TemplateView):
       thisform = AppointmentForm(request.POST)
       if thisform.is_valid():
          ## process:
-         print(thisform.cleaned_data.get('art_appointmenttime'))
          qa = art_appointment.objects.create(
             art_clientid = thisform.cleaned_data.get("art_clientid"),
             art_appointmenttime = thisform.cleaned_data.get("art_appointmenttime")
@@ -533,3 +534,83 @@ class PaintingDelete(TemplateView):
       art_painting.objects.filter(id=art_paintingid).delete()
       return HttpResponseRedirect('/appointment/' + str(art_appointmentid))
 
+
+
+######   REPORTING
+
+
+class ReportMenu(TemplateView):
+   def get(self, request):
+      dreports = {
+         './report/paintingcounts': 'Painting Color/Mood Counts'
+      }
+      context = {
+         'dreports': dreports
+      }
+      return render(request, 'trackart/reportsmenu.html', context=context)
+
+      
+class ReportPaintingCounts(TemplateView):
+   def get(self, request):
+      dnavlinks = getnavdictfromparamsdict(
+         dparams = { 'reports': 0 },
+         cururl = request.path_info
+      )      
+      ## query stuff:
+      from django.db.models import Count      
+      ## this gets the connection between these lookups and # of paintings they appear in:
+      qcolorcount = paintcolor.objects.annotate(paintingcount=Count('art_painting')).order_by('-paintingcount')
+      qmoodcount = clientmood.objects.annotate(paintingcount=Count('art_painting')).order_by('-paintingcount')
+      
+      context = {
+         'dnavlinks': dnavlinks,
+         'qcolorcount': qcolorcount,
+         'qmoodcount': qmoodcount
+      }
+      return render(request, 'trackart/reportpaintingcount.html', context=context)
+
+   def post(self, request):
+      if 'lcolors' not in request.POST and 'lmoods' not in request.POST:
+         return HttpResponseRedirect(request.path_info)
+      else:
+         dpaintcolorxqs = { }
+         dclientmoodxqs = { }
+         ## >> REFACTOR: >>  is it good practice to put obscure "import"-s in the 'function' that needs them?
+         from django.db.models import Count      
+         if 'lcolors' in request.POST:
+            ## GOAL:  for each checked color, show moods it was associated with:
+            ## 1) get the name for each color we care about:
+            qcolor = paintcolor.objects.filter(id__in = request.POST.getlist('lcolors')).annotate(paintingcount=Count('art_painting')).order_by('-paintingcount')
+
+            ## 2) get the Mood Breakdown data -- [query of all paintings by this color] . [counts of moods for those paintings]
+            for qcr in qcolor:
+               dpaintcolorxqs[ qcr ] = clientmood.objects.filter(
+                     art_painting__in = art_painting.objects.filter(paintcolors = qcr.id)
+                  ).annotate(
+                     paintingcount = Count('art_painting'),
+                     paintingpercent = ( (Count('art_painting') * 100) / qcr.paintingcount)
+                  ).order_by('-paintingcount')
+
+         if 'lmoods' in request.POST:
+            ## GOAL:  for each checked mood, show moods it was associated with:
+            ## 1) get the name for each mood we care about:
+            qmood = clientmood.objects.filter(id__in = request.POST.getlist('lmoods')).annotate(paintingcount=Count('art_painting')).order_by('-paintingcount')
+
+            ## 2) get the Color Breakdown data -- [query of all paintings by this color] . [counts of color for those paintings]
+            for qmr in qmood:
+               dclientmoodxqs[ qmr ] = paintcolor.objects.filter(
+                     art_painting__in = art_painting.objects.filter(clientmoods = qmr.id)
+                  ).annotate(
+                     paintingcount = Count('art_painting'),
+                     paintingpercent = ( (Count('art_painting') * 100) / qmr.paintingcount)
+                  ).order_by('-paintingcount')
+         dnavlinks = getnavdictfromparamsdict(
+            dparams = { 'reports': 'post' },
+            cururl = request.path_info
+         )
+         context = {
+            'dnavlinks': dnavlinks,
+            'dpaintcolorxqs': dpaintcolorxqs,
+            'dclientmoodxqs': dclientmoodxqs
+         }
+         return render(request, 'trackart/reportpaintingcount_results.html', context=context)
