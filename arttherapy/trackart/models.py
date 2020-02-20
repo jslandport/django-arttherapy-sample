@@ -61,5 +61,5 @@ class art_painting(models.Model):
    clientmoods = models.ManyToManyField(clientmood)
    ## 'summary' of a row, for various admin / display purposes baked into django
    def __str__(self):
-      return self.art_paintingtitle + ', created ' + self.createDate.strftime(myfulltime)
+      return self.art_paintingtitle + ' by ' + self.art_appointmentid.art_clientid.art_clientfirstname + ' ' + self.art_appointmentid.art_clientid.art_clientlastname ### ', created ' + self.createDate.strftime(myfulltime)
       
