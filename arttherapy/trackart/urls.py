@@ -29,9 +29,11 @@ urlpatterns = [
 	path('appointment/<int:art_appointmentid>/painting/<int:art_paintingid>', views.PaintingView.as_view()),
 	path('appointment/<int:art_appointmentid>/paintingnew', views.PaintingNew.as_view()),
 	path('appointment/<int:art_appointmentid>/paintingwrite/<int:art_paintingid>', views.PaintingWrite.as_view()),
-	path('appointment/<int:art_appointmentid>/paintingdelete/<int:art_paintingid>', views.PaintingDelete.as_view())
+	path('appointment/<int:art_appointmentid>/paintingdelete/<int:art_paintingid>', views.PaintingDelete.as_view()),
 	
-	## add/edit records(?)
+   ## REPORTING
+	path('reports', views.ReportMenu.as_view()),
+	path('report/paintingcounts', views.ReportPaintingCounts.as_view())
 ]
 
 ###path('client/<int:art_clientid>', views.ClientView.as_view()),
