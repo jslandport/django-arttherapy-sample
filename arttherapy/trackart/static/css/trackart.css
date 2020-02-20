@@ -25,3 +25,6 @@ A, A:link, A:visited, A:active, A:hover { color:#b73 }
 .series div { float:left; margin-right:20px; font-weight:bold }
 
 .postseries { clear:both; height:8px }
+
+.layoutchunk { clear:both }
+.layoutslice { float:left; padding-right:5% }
