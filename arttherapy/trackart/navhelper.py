@@ -25,6 +25,10 @@ def getnavdictfromparamsdict(dparams, cururl):
                dcrumb[thislink] = 'This Painting'
          ## link to list-of-paintings
          dback['/viewpaintings'] = 'All Paintings'
+      elif thiskey == 'reports':
+         dback['/reports'] = 'Reporting'
+         if dparams[thiskey] == 'post':
+            dcrumb[cururl] = 'This Report'
    if dcrumb:
       dnav['dcrumb'] = dcrumb
    if dback:
