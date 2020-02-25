@@ -39,9 +39,9 @@ def reverse_func(apps, schema_editor):
    # so reverse_func() should delete them.
    db_alias = schema_editor.connection.alias
    paintcolor = apps.get_model("trackart", "paintcolor")
-   paintcolor.objects.using(db_alias).filter(paintcolortitle__in=["Red", "Yellow", "Blue", "Orange", "Green", "Purple", "Gray", "Black", "White"]).delete()
+   paintcolor.objects.using(db_alias).filter(paintcolortitle__in=("Red", "Yellow", "Blue", "Orange", "Green", "Purple", "Gray", "Black", "White")).delete()
    clientmood = apps.get_model("trackart", "clientmood")
-   clientmood.objects.using(db_alias).filter(clientmoodtitle__in=["Happy","Sad","Angry","Relaxed","Annoyed","Sleepy"]).delete()
+   clientmood.objects.using(db_alias).filter(clientmoodtitle__in=("Happy","Sad","Angry","Relaxed","Annoyed","Sleepy")).delete()
 
 
 class Migration(migrations.Migration):
