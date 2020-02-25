@@ -114,6 +114,10 @@ USE_L10N = True
 
 USE_TZ = True
 
+### this will make the default format m/d/y H:M AM/PM:
+from django.conf.locale.en import formats as en_formats
+en_formats.DATE_FORMAT = 'm/d/Y'
+en_formats.DATETIME_FORMAT = 'm/d/Y P'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
