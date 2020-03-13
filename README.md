@@ -3,6 +3,9 @@
 __A client x appointment x painting's-quantitative-data application, built so that I can learn Django (and Python) with a simple interface for a several-layered database schema.__
 
 
+![image](https://user-images.githubusercontent.com/54818691/76648530-3ed46380-6535-11ea-97ee-78e6cdbd6f77.png)
+
+
 ##  Setup:
 Before you can run this application, you will need to install Python and Django, download my code from GitHub, perform 2 command line statements to set up and populate the database, then 1 command line statement to run the Django server.  Here is how I did this:
 
